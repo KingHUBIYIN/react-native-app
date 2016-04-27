@@ -5,6 +5,7 @@ var {ActionTypes,EventTypes} = require('../constants/system-constants');
 var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 
+var _error_msg = {status:"error",msg:"操作失败"};
 // store model
 var _send_info_list = [];
 var _message_list = [];
@@ -27,6 +28,9 @@ var SystemStore = assign({},EventEmitter.prototype,{
     removeChangeListener:function(type,callback){
         this.removeListener(type,callback)
     },
+	getErrorMsg:function(){
+		return _error_msg;
+	},
     getMySendInfo:function(){
         return _send_info_list;
     },
@@ -92,6 +96,10 @@ var SystemStore = assign({},EventEmitter.prototype,{
 
 SystemStore.dispatchToken = SystemDispatcher.register(function(action){
     switch(action.type){
+		case ActionTypes.RECEIVED_ERROR_MSG:
+            _error_msg = action.data;
+            SystemStore.emitChange(EventTypes.RECEIVED_ERROR_MSG);
+            break;
         case ActionTypes.RECEIVED_MY_SEND_INFO:
             _send_info_list = action.data;
             SystemStore.emitChange(EventTypes.RECEIVED_MY_SEND_INFO);

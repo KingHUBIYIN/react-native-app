@@ -1,10 +1,10 @@
 var {Dimensions,StatusBar,Platform} = require('react-native');
 
-var {width,scale,height} = Dimensions.get("window");
+var {width,scale,height,fontScale} = Dimensions.get("window");
 var isIOS = Platform.OS == "ios";
 var statusBarHeight = isIOS? 20: StatusBar.currentHeight;
-
-
+var fontScale = scale;
+if(scale>3) fontScale = 3;
 module.exports = {
 	get:Dimensions.get,
 	screenWidth:width,
@@ -14,28 +14,28 @@ module.exports = {
 	height:height,
 	scale:scale,
 	statusBarHeight:statusBarHeight,
-	toolBarHeight:16*scale,
-	tabBarHeight:22*scale,
+	toolBarHeight:16*fontScale,
+	tabBarHeight:22*fontScale,
 	contentHeight:height-statusBarHeight,
 	getFontSize:function(size){
-		return size*scale;// 4 6 8 12 16 24 32 48 64
+		return size*fontScale;// 4 6 8 12 16 24 32 48 64
 	},
 	getWidth:function(width){
-		return width*scale;
+		return width*fontScale;
 	},
 	getHeight:function(height){
-		return height*scale;
+		return height*fontScale;
 	},
 	size:{
-		"2":2*scale,
-		"4":4*scale,
-		"6":6*scale,
-		"8":8*scale,
-		"12":12*scale,
-		"16":16*scale,
-		"24":24*scale,
-		"32":32*scale,
-		"48":48*scale,
-		"64":64*scale,
+		"2":2*fontScale,
+		"4":4*fontScale,
+		"6":6*fontScale,
+		"8":8*fontScale,
+		"12":12*fontScale,
+		"16":16*fontScale,
+		"24":24*fontScale,
+		"32":32*fontScale,
+		"48":48*fontScale,
+		"64":64*fontScale,
 	}
 }

@@ -4,6 +4,12 @@ var SystemConstants = require('../constants/system-constants');
 var ActionTypes = SystemConstants.ActionTypes;
 
 module.exports = {
+	receivedErrorMsg:function(data){
+        SystemDispatcher.dispatch({
+            type:ActionTypes.RECEIVED_ERROR_MSG,
+            data:data
+        })
+    },
     receivedMySendInfo:function(data){
         SystemDispatcher.dispatch({
             type:ActionTypes.RECEIVED_MY_SEND_INFO,

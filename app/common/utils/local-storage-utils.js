@@ -118,6 +118,8 @@ module.exports = {
     },
     getData:function(callback){
         manager.getData(function(error,result){
+			if(result==null) 
+				result=JSON.stringify(data);
             callback(error,result)
         });
     }

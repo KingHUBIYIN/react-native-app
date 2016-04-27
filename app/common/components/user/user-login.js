@@ -40,16 +40,12 @@ var UserLoginView = React.createClass({
     handleUserLogin:function(){
         var form_data = this.state.form_data;
         // 校验表单
-        if(!form_data.user_name){
+        if(!form_data.username){
             Alert.alert("提示","请输入用户名");
             return;
         }
-        if(!form_data.user_pwd){
+        if(!form_data.password){
             Alert.alert("提示","请输入密码");
-            return;
-        }
-        if(form_data.user_name!="admin" || form_data.user_pwd!="123456"){
-            Alert.alert("提示","你输入的用户名或密码错误");
             return;
         }
         WebAPIActions.userLogin(form_data);
@@ -65,10 +61,10 @@ var UserLoginView = React.createClass({
                             <View style={styles.logoView}>
                             </View>
 							<View style={styles.inputView}>
-								<TextInput name="user_name" placeholder="请输入用户名" style={styles.input} value={form_data.user_name} onChangeText={this.handleTextChange}></TextInput> 
+								<TextInput name="username" placeholder="请输入用户名" style={styles.input} value={form_data.username} onChangeText={this.handleTextChange}></TextInput> 
 							</View>
 							<View style={styles.inputView}>
-								<TextInput name="user_pwd" placeholder="请输入密码" style={styles.input} secureTextEntry={true} value={form_data.user_pwd}  onChangeText={this.handleTextChange} maxLength={16}></TextInput> 
+								<TextInput name="password" placeholder="请输入密码" style={styles.input} secureTextEntry={true} value={form_data.password}  onChangeText={this.handleTextChange} maxLength={16}></TextInput> 
 							</View>
 							<Button title="登陆" style={styles.button} textAlign="center" onPress={this.handleUserLogin}></Button>
 					</View>			  	

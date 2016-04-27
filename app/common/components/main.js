@@ -6,7 +6,8 @@ var {
   Navigator,
   StyleSheet,
   Dimensions,
-  ListView
+  ListView,
+  Alert
 } = require('react-native')
 
 var {height, width} = Dimensions.get('window');
@@ -30,35 +31,12 @@ var FormAddress =  require('./form/form-address')
 var FormSelection = require('./form/form-selection')
 var FormDatePicker = require('./form/form-datepicker')
 
-var router = require('./base/react-native-router')
-var Route = router.Route;
-var Router = router.Router;
-var History = router.History;
+var {Route,Router,History} = require('./base/react-native-router')
 
 var SystemStore = require('../stores/system-store')
 var {EventTypes} = require('../constants/system-constants')
 
 var MainApp = React.createClass({
-	componentDidMount:function(){
-		SystemStore.addChangeListener(EventTypes.RECEIVED_USER_INFO,this.handleUserDataChange);
-	},
-	componentWillUnmount:function(){
-		SystemStore.removeChangeListener(EventTypes.RECEIVED_USER_INFO,this.handleUserDataChange);
-	},
-	handleUserDataChange:function(){
-		var user = SystemStore.getUserInfo();
-		if(!(user && user.user_name) || History.curRoute.name!="/user/login"){
-			// History.pushRoute("/user/login");
-			// test
-			SystemStore.setUserInfo({
-				user_name:"admin",
-				user_pwd:"123456"
-			})
-			History.pushRoute("/home/index");
-		}else{
-			History.pushRoute("/home/index");
-		}
-	},
     render:function(){
         return (<View style={styles.main}>
                 {this.props.children}
