@@ -9,6 +9,7 @@ var {
 } = require('react-native');
 var Dimensions = require('./react-native-dimensions');
 var {height, width} = Dimensions.get('window');
+var colorUtils = require('../../utils/color-utils')
 // navIcon,logo,title,titleColor,subtitle,subtitleColor,actions
 // name title icon show showWithText
 var ActionButton = React.createClass({
@@ -28,7 +29,7 @@ var ActionButton = React.createClass({
         var img = this.genImage();
         return (<TouchableOpacity onPress={this.onPress} style={ [styles.button,{"width":this.props.width,"marginLeft":this.props.marginLeft} ]}>
                         {img}
-                        <Text style={{color:"#fff",fontSize:Dimensions.size["6"]}}>{this.props.title}</Text>
+                        <Text style={{color:"#fff",fontSize:Dimensions.size["7"]}}>{this.props.title}</Text>
                 </TouchableOpacity>)
     }
 })
@@ -89,12 +90,15 @@ var ToolBar = React.createClass({
         }
     },
     render:function(){
-        var { navIcon,logo,title,titleColor,subtitle,subtitleColor,actions} = this.state;
+        var { titleColor,subtitleColor} = this.state;
         var onActionPress = this.onActionPress;
         var title = this.genTitle(this.props.title);
         var subtitle = this.genSubtitle(this.props.subtitle);
-        return (<View style={styles.toolbar}>
-                            <View style={[styles.item,styles.actions,{justifyContent:"flex-start",marginLeft:5}]}>
+		var actions = this.props.actions?this.props.actions:[];
+		var navIcon = this.props.navIcon?this.props.navIcon:{};
+		var logo = this.props.logo?this.props.logo:{};
+        return (<View style={[styles.toolbar,colorUtils.toolbar]}>
+                            <View style={[styles.item,styles.actions,{justifyContent:"flex-start",marginLeft:Dimensions.size["4"]}]}>
                                 <ActionButton icon={navIcon.icon} title={navIcon.title} name={navIcon.name} width={navIcon.width} onPress={this.onNavIconPress}/>
                                 <ActionButton icon={logo.icon} title={logo.title} name={logo.name} width={navIcon.width}  onPress={this.onLogoPress}/>
                             </View>
@@ -102,7 +106,7 @@ var ToolBar = React.createClass({
                                 { title }
                                 { subtitle }
                             </View>
-                            <View style={[styles.item,styles.actions,{justifyContent:"flex-end",marginRight:Dimensions.size["2"]}]}>
+                            <View style={[styles.item,styles.actions,{justifyContent:"flex-end",marginRight:Dimensions.size["4"]}]}>
                                 {
                                     actions.map(function(action,pos){
                                         action.onPress = onActionPress;
@@ -124,7 +128,7 @@ var styles = StyleSheet.create({
         borderBottomColor:"#ccc",
         borderBottomWidth:0.5,
         borderStyle:"solid",
-        backgroundColor:"#3399ff",
+        backgroundColor:"#74C93C",
 		height:Dimensions.toolBarHeight
     },
     item:{
@@ -140,7 +144,7 @@ var styles = StyleSheet.create({
     title:{
         flex:1,
         color:"#fff",
-        fontSize:Dimensions.size["6"],
+        fontSize:Dimensions.size["9"],
         textAlign:"center"
     },
     subtitle:{

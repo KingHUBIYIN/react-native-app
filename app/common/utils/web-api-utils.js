@@ -8,7 +8,7 @@ const STUDENT_URL = 'http://edu.idealsee.com';
 
 var Ajax = function(options){
 	// change data
-	var formData = "";
+	var formData = null;
 	switch(typeof options.data){
 		case "string":
 			formData = options.data;
@@ -52,25 +52,29 @@ var helper = {
 		Alert.alert("提示",error.msg,[{text: '确定', onPress: () => {} }])
 	},
 	handleUserDataChange:function(user){
-		if(!(user && user.username) || History.curRoute.name!="/user/login"){
-			History.pushRoute("/user/login");
-		}else{
-			History.pushRoute("/home/index");
-		}
+		History.pushRoute("/user/login");
 	},
 }
 
-
 module.exports = {
-    getMySendInfo:function(){
-        
-    },
-    getMyMessage:function(){
-        
+	baseUrl:STUDENT_URL,
+    getStudentInfo:function(formData){
+		Ajax({
+			url:"/api/s/student_info/",
+			type:"get",
+			data:formData,
+			success:function(res){
+				localStorageUtils.setData("student_info",res.data);
+				systemActions.receivedStudentInfo(res.data);
+			},
+			error:function(status,msg){
+				helper.handleErrorMsgChange({status,msg});
+			}
+		})
     },
 	userLogout:function(formData){
 		localStorageUtils.setData("user_info",{});
-		systemActions.receivedUserInfo({});
+		systemActions.postedUserLoginForm({});
 	},
 	userLogin:function(formData){
 		Ajax({
@@ -86,41 +90,13 @@ module.exports = {
 			}
 		})
 	},
-	postSendCarryForm:function(formData){
-		localStorageUtils.getData(function(error,json){
-			var data = JSON.parse(json);
-			if(data && data.my_send_info){
-				data.my_send_info = data.my_send_info?data.my_send_info:[];
-				data.my_send_info.push(formData);
-				localStorageUtils.setData("my_send_info",data.my_send_info);
-			}
-	  });
-		systemActions.postedSendCarryForm(formData);
-	},
-	postSendShipForm:function(formData){
-		localStorageUtils.getData(function(error,json){
-			var data = JSON.parse(json);
-			if(data && data.my_send_info){
-				data.my_send_info = data.my_send_info?data.my_send_info:[];
-				data.my_send_info.push(formData);
-				localStorageUtils.setData("my_send_info",data.my_send_info);
-			}
-	  });
-		systemActions.postedSendShipForm(formData);
-	},
     initData:function(){
-//        localStorageUtils.setData();
         localStorageUtils.getData(function(error,json){
             var data = JSON.parse(json);
             if(data && data.user_info){
                 systemActions.receivedUserInfo(data.user_info);
-                systemActions.receivedMySendInfo(data.my_send_info);
-                systemActions.receivedMyMessage(data.my_message);
-				systemActions.receivedProvinces(data.provinces);
-				systemActions.receivedCategory(data.category);
             }
 			helper.handleUserDataChange(data.user_info);
         });
-    },
-
+    }
 }

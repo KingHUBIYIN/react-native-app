@@ -10,6 +10,7 @@ var _error_msg = {status:"error",msg:"操作失败"};
 var _send_info_list = [];
 var _message_list = [];
 var _user_info = {};
+var _student_info = {};
 // form address
 var _provinces = [];
 var _address_form = {}
@@ -31,21 +32,8 @@ var SystemStore = assign({},EventEmitter.prototype,{
 	getErrorMsg:function(){
 		return _error_msg;
 	},
-    getMySendInfo:function(){
-        return _send_info_list;
-    },
-	getMySendInfoByFormKey:function(form_key){
-		var list = _send_info_list.filter(function(ele,pos){
-			return ele.form_key == form_key;
-		})
-		if(list.length>0){
-			return list[0];
-		}else{
-			return null
-		}
-	},
-    getMyMessage:function(){
-        return _message_list;
+    getStudentInfo:function(){
+        return _student_info;
     },
 	getUserInfo:function(){
 		return _user_info;
@@ -100,21 +88,17 @@ SystemStore.dispatchToken = SystemDispatcher.register(function(action){
             _error_msg = action.data;
             SystemStore.emitChange(EventTypes.RECEIVED_ERROR_MSG);
             break;
-        case ActionTypes.RECEIVED_MY_SEND_INFO:
-            _send_info_list = action.data;
-            SystemStore.emitChange(EventTypes.RECEIVED_MY_SEND_INFO);
-            break;
-        case ActionTypes.RECEIVED_MY_MESSAGE:
-            _message_list = action.data;
-            SystemStore.emitChange(EventTypes.RECEIVED_MY_MESSAGE);
-            break;
-        case ActionTypes.RECEIVED_USER_INFO:
-            _user_info = action.data;
-            SystemStore.emitChange(EventTypes.RECEIVED_USER_INFO);
+        case ActionTypes.RECEIVED_STUDENT_INFO:
+            _student_info = action.data;
+            SystemStore.emitChange(EventTypes.RECEIVED_STUDENT_INFO);
             break;
         case ActionTypes.POSTED_USER_LOGIN_FORM:
-            var data = action.data;
+            _user_info = action.data;
             SystemStore.emitChange(EventTypes.POSTED_USER_LOGIN_FORM);
+            break;
+		case ActionTypes.RECEIVED_USER_INFO:
+            _user_info = action.data;
+            SystemStore.emitChange(EventTypes.RECEIVED_USER_INFO);
             break;
 		case ActionTypes.RECEIVED_PROVINCES:
 			_provinces = action.data;

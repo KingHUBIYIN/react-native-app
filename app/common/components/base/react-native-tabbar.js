@@ -61,7 +61,7 @@ var Tab = React.createClass({
             var color = selected ?  selectedColor : defaultColor;
             return (<Text style={[{"color":color,"fontFamily":Utils.from},styles.systemIcon]}>{glypy[systemIcon]}</Text>)
         } else {
-            return (<Image source={selected? icon : selectedIcon}></Image>)
+            return (<Image source={selected?  selectedIcon : icon}></Image>)
         }
     },
     render:function(){
@@ -69,7 +69,7 @@ var Tab = React.createClass({
         var icon = this.genIcon();
         return (<TouchableOpacity style={styles.tab} onPress={this.onPress}>
                         <View>
-                            <View>
+                            <View style={styles.iconRow}>
                                 {icon}
                             </View>
                             <View style={styles.labelRow}>
@@ -90,7 +90,7 @@ var styles = StyleSheet.create({
         justifyContent:"space-around",// 水平方向
         alignItems:"center",
         width:width,
-        borderTopColor:"#ccc",
+        borderTopColor:"#d8d8d8",
         borderTopWidth:0.5,
         borderStyle:"solid",
 		height:Dimensions.tabBarHeight
@@ -98,6 +98,10 @@ var styles = StyleSheet.create({
     tab:{
         flex:1
     },
+	iconRow:{
+		flexDirection:"row",
+		justifyContent:"center"
+	},
     systemIcon:{
         fontSize:Dimensions.size["8"],
         textAlign:"center",
@@ -110,7 +114,7 @@ var styles = StyleSheet.create({
     },
     label:{
         fontSize:Dimensions.size["4"],
-        color:"#ddd",
+        color:"#282828",
         textAlign:"center",
         lineHeight:Dimensions.size["6"]
     }

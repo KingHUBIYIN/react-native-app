@@ -4,7 +4,8 @@ var {
   View,
   Text,
   Navigator,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableHighlight
 } = require('react-native');
 
 var navigator = null;
@@ -183,7 +184,7 @@ var Router = React.createClass({
       // PushFromRight FloatFromRight FloatFromLeft FloatFromBottom 
       // FloatFromBottomAndroid FadeAndroid
       // HorizontalSwipeJump VerticalUpSwipeJump VerticalDownSwipeJump
-      return route.config || Navigator.SceneConfigs.FloatFromRight;
+      return route.config || Navigator.SceneConfigs.PushFromRight;
   },
   render: function() {     
     return (
@@ -201,16 +202,18 @@ var Link = React.createClass({
     handlePress:function(e){
         var name = this.props.name;
         var index = this.props.index || 0;
-        var config = this.props.config || Navigator.SceneConfigs.FloatFromRight;
+        var config = this.props.config || Navigator.SceneConfigs.PushFromRight;
         RouteHistory.pushRoute(name,index,config);
         if(this.props.onPress){
             this.props.onPress(e);
         }
     },
     render:function(){
-        return (<TouchableOpacity underlayColor="#B5B5B5" onPress={this.handlePress} style={this.props.style}>
-                { this.props.children }
-                </TouchableOpacity>)
+        return (<TouchableHighlight underlayColor="#d8d8d8" onPress={this.handlePress} >
+					<View style={this.props.style}>
+						{ this.props.children }
+					</View>
+                </TouchableHighlight>)
     }
 });
         

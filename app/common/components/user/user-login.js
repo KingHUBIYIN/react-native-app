@@ -21,9 +21,16 @@ var {EventTypes} = require('../../constants/system-constants');
 var UserLoginView = React.createClass({
     getInitialState:function(){
         return {
-            form_data:{}
+            form_data:SystemStore.getUserInfo()
         }
     },
+	componentWillMount:function(){
+		var user_info = SystemStore.getUserInfo();
+		if(user_info && user_info.username){
+			// WebAPIActions.userLogin({username:"svxcc20150320",password:"xc12345678"});
+			WebAPIActions.userLogin(user_info);
+		}
+	},
     componentDidMount:function(){
         SystemStore.addChangeListener(EventTypes.POSTED_USER_LOGIN_FORM,this.handleUserLoginSuccess);
     },
@@ -51,12 +58,16 @@ var UserLoginView = React.createClass({
         WebAPIActions.userLogin(form_data);
     },
     handleUserLoginSuccess:function(){
-        Alert.alert("提示","登录成功",[{text: '确定', onPress: () => History.resetToRoute("/home/index") }]);
+		History.resetToRoute("/home/index"); 
+//        Alert.alert("提示","登录成功",[{text: '确定', onPress: () => {
+//				History.resetToRoute("/home/index"); 
+//			}
+//		}]);
     },
     render:function(){
         var form_data = this.state.form_data;
         return (<ContentContainer style={styles.container}>
-                    <ToolBar navIcon={{}} logo={{}} title="登录" subtitle="用户登录页面" actions={[]}></ToolBar>
+                    <ToolBar title="登录"></ToolBar>
                     <View style={styles.form}>
                             <View style={styles.logoView}>
                             </View>
@@ -100,7 +111,7 @@ var styles = StyleSheet.create({
 	  button:{
 		  width:Dimensions.size["64"],
 		  height:Dimensions.size["12"],
-		  backgroundColor:"#3399ff",
+		  backgroundColor:"#74C93C",
 		  borderBottomLeftRadius:Dimensions.size["2"],
 		  borderBottomRightRadius:Dimensions.size["2"],
 		  borderTopLeftRadius:Dimensions.size["2"],

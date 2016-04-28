@@ -10,21 +10,15 @@ module.exports = {
             data:data
         })
     },
-    receivedMySendInfo:function(data){
-        SystemDispatcher.dispatch({
-            type:ActionTypes.RECEIVED_MY_SEND_INFO,
-            data:data
-        })
-    },
-    receivedMyMessage:function(data){
-        SystemDispatcher.dispatch({
-            type:ActionTypes.RECEIVED_MY_MESSAGE,
-            data:data
-        })
-    },
     receivedUserInfo:function(data){
         SystemDispatcher.dispatch({
             type:ActionTypes.RECEIVED_USER_INFO,
+            data:data
+        })
+    },
+    receivedStudentInfo:function(data){
+        SystemDispatcher.dispatch({
+            type:ActionTypes.RECEIVED_STUDENT_INFO,
             data:data
         })
     },
@@ -64,16 +58,5 @@ module.exports = {
             data:data
         })
 	},
-	postedSendCarryForm:function(data){
-        SystemDispatcher.dispatch({
-            type:ActionTypes.POSTED_SEND_CARRY_FORM,
-            data:data
-        })
-	},
-	postedSendShipForm:function(data){
-        SystemDispatcher.dispatch({
-            type:ActionTypes.POSTED_SEND_SHIP_FORM,
-            data:data
-        })
-	}
+
 }

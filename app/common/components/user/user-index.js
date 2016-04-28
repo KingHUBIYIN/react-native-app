@@ -1,123 +1,139 @@
 'use strict'
 var React = require('react');
 var {
-    ListView,
+    Text,
     View,
+    Navigator,
 	StyleSheet,
-    Alert,
-    AppRegistry,
-	Platform,
-	Navigator
-} = require('react-native');
+	Image
+} = require('react-native')
+var Dimensions = require('../base/react-native-dimensions');
+var {Link,History} = require('../base/react-native-router');
 var TabBars = require('../base/tabbars');
-var {ContentContainer}  = require('../base/system-container')
+var {ContentContainer,RowContainer,Splitter,WebImage} = require('../base/system-container')
 var ToolBar = require('../base/react-native-toolbar');
-var { Link,History } = require('../base/react-native-router');
-var { Button } = require('../base/react-native-form');
-var Dimensions = require('../base/react-native-dimensions')
-var WebAPIActions = require('../../actions/web-api-actions')
-var SystemStore = require('../../stores/system-store')
+
+var SystemStore = require('../../stores/system-store');
+var {EventTypes} = require('../../constants/system-constants');
+var ColorUtils = require('../../utils/color-utils');
+var WebAPIActions = require('../../actions/web-api-actions');
+
+var btn_next_normal = require('../../images/btn_next_normal.png');
+var ico_help = require('../../images/ico_help.png');
+var ico_set = require('../../images/ico_set.png');
 
 var UserIndexView = React.createClass({
 	getInitialState:function(){
-		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 		return {
-			buttons:ds.cloneWithRows([
-				{
-					name:"my_send_msg",
-					title:"我发布的信息"
-				},
-				{
-					name:"about",
-					title:"关于应用"
-				},
-				{
-					name:"version",
-					title:"版本信息"
-				},
-				{
-					name:"upgrade",
-					title:"更新"
-				},
-				{
-					name:"exit",
-					title:"关闭应用"
-				},
-				{
-					name:"logout",
-					title:"退出当前账号"
-				}
-			])
+			student_info:SystemStore.getStudentInfo()
 		}
 	},
-	_pressRow:function(e,name){
-		switch(name){
-			case "logout":
-                var handle = function(){
-					// WebAPIActions.userLogout({});
-					SystemStore.clearUserInfo();
-                    History.pushRoute("/user/login",0,Navigator.SceneConfigs.PushFromRight);
-                }
-                Alert.alert("提示","确定要退出当前账号吗？",[{text: '确定', onPress: handle },{text: '取消', onPress: function(){} }]);
-				break;
-            case "exit":
-                var handle = function(){
-                    // invalid
-                    // AppRegistry.unmountApplicationComponentAtRootTag(1);
-                }
-                Alert.alert("提示","确定要关闭应用吗？",[{text: '确定', onPress: handle },{text: '取消', onPress: function(){} }]);
-                break;
-			case "about":
-                var handle = function(){
-                }
-                Alert.alert("关于应用","Logistics Workflow是由Idealsee集团使用ReactNative开发。",[{text: '确定', onPress: handle }]);
-                break;
-			case "version":
-                var handle = function(){
-                }
-                Alert.alert("版本信息","产品版本v0.0.1,设备版本v"+Platform.Version+"。",[{text: '确定', onPress: handle }]);
-                break;
-			case "upgrade":
-                var handle = function(){
-                }
-                Alert.alert("更新","产品暂无更新版本",[{text: '确定', onPress: handle }]);
-                break;
-		}
+	componentWillMount:function(){
+		WebAPIActions.getStudentInfo();
+	},
+    componentDidMount:function(){
+        SystemStore.addChangeListener(EventTypes.RECEIVED_STUDENT_INFO,this.handleStudentInfoSuccess);
     },
-	_renderRow:function(rowData,sectionID, rowID){
-		return (<Button name={rowData.name} title={rowData.title} onPress={this._pressRow} style={styles.button} titleStyle={styles.buttonText}></Button>)
+    componentWillUnmount:function(){
+         SystemStore.removeChangeListener(EventTypes.RECEIVED_STUDENT_INFO,this.handleStudentInfoSuccess);
+    },
+	handleStudentInfoSuccess:function(){
+		this.setState({
+			student_info:SystemStore.getStudentInfo()
+		})
 	},
     render:function(){
+		var student_info = this.state.student_info;
+		var student = student_info.student ? student_info.student : {};
+		var avatar = student.avatar?student.avatar:"/static/images/iconfont-ren.png";
+		var class_data = student_info.class_data?student_info.class_data : {};
+		var school = student_info.school?student_info.school:{};
         return (<ContentContainer>
-                    <ToolBar navIcon={{}} logo={{icon:require('../../images/logo.png')}} title="我" subtitle="当前状态：在线" actions={[]}></ToolBar>
-                    <View>
-                           <ListView style={{marginTop:Dimensions.size["2"]}}
-								enableEmptySections={true}
-                                dataSource={this.state.buttons}
-                                renderRow={this._renderRow}
-                                renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`} style={styles.separator} />}
-							></ListView>
-                    </View>
-                    <TabBars name="/user/index"></TabBars>
+                        <ToolBar title="我的信息" ></ToolBar>
+                        <RowContainer style={styles.row}>
+							 	<Link name="/user/info" style={styles.infoLink}>
+										<WebImage src={avatar} style={styles.infoImg} />
+										<View style={styles.userRow}>
+											<Text style={[ColorUtils.text2,styles.name]}>{student.name}</Text>
+											<Text style={[ColorUtils.text8,styles.school]}>{school.name}</Text>
+										</View>
+										<Image source={btn_next_normal} style={styles.next}/>
+								</Link>	
+						</RowContainer>   
+						<RowContainer style={styles.row}>
+							 	<Link name="/user/help" style={styles.link}>
+										<Image source={ico_help} style={styles.icon}/>
+										<View style={styles.textRow}>
+											<Text style={[ColorUtils.text3,styles.text]}>帮助</Text>
+										</View>
+										<Image source={btn_next_normal} style={styles.next}/>
+								</Link>	
+								<Splitter />
+							 	<Link name="/settings/index" style={styles.link}>
+										<Image source={ico_set} style={styles.icon}/>
+										<View style={styles.textRow}>
+											<Text style={[ColorUtils.text3,styles.text]}>设置</Text>
+										</View>
+										<Image source={btn_next_normal} style={styles.next}/>
+								</Link>	
+						</RowContainer>
+                        <TabBars name="/user/index"></TabBars>
                 </ContentContainer>)
     }
 })
-
+		
 var styles = StyleSheet.create({
-	  separator: {
-			height: 1,
-			backgroundColor: '#ccc',
-	  },
-	  button:{
-			backgroundColor: "#f6f6f6",
-			marginTop:Dimensions.size["2"],
-			borderTopWidth:1,
-			borderTopColor:"#ddd",
-			borderStyle:"solid"
-	  },
-	  buttonText:{
-			color:"#555"
-	  }
+	row:{
+		marginTop:Dimensions.size["5"]
+	},
+	infoLink:{
+		flexDirection:"row",
+		justifyContent:"center",
+		alignItems:"center",
+		paddingHorizontal:Dimensions.size["10"],
+		height:Dimensions.size["45"]
+	},
+	infoImg:{
+		width:Dimensions.size["30"],
+		height:Dimensions.size["30"]
+	},
+	userRow:{
+		width:Dimensions.screenWidth-Dimensions.size["48"],
+		flexDirection:"column",
+		justifyContent:"flex-start",
+		paddingLeft:Dimensions.size["5"]
+	},
+	name:{
+		fontSize:Dimensions.size["10"]
+	},
+	school:{
+		fontSize:Dimensions.size["6"]
+	},
+	next:{
+		width:Dimensions.size["8"],
+		height:Dimensions.size["8"]
+	},
+	link:{
+		flexDirection:"row",
+		justifyContent:"center",
+		alignItems:"center",
+		paddingHorizontal:Dimensions.size["10"],
+		height:Dimensions.size["22"]
+	},
+	icon:{
+		width:Dimensions.size["10"],
+		height:Dimensions.size["10"],
+		marginLeft:Dimensions.size["5"],
+	},
+	textRow:{
+		width:Dimensions.screenWidth-Dimensions.size["32"],
+		flexDirection:"column",
+		justifyContent:"flex-start",
+		paddingLeft:Dimensions.size["5"]
+	},
+	text:{
+		fontSize:Dimensions.size["8"]
+	}
 })
 
 module.exports = UserIndexView;

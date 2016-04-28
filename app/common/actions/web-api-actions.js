@@ -2,22 +2,13 @@ var SystemDispatcher = require('../dispatcher/system-dispatcher');
 var WebAPIUtils = require('../utils/web-api-utils');
 
 module.exports = {
-    getMySendInfo:function(formData){
-        WebAPIUtils.getMySendInfo(formData);
-    },
-    getMyMessage:function(formData){
-        WebAPIUtils.getMyMessage(formData);
-    },
 	userLogout:function(formData){
 		WebAPIUtils.userLogout(formData);
 	},
 	userLogin:function(formData){
 		WebAPIUtils.userLogin(formData);
 	},
-	postSendCarryForm:function(formData){
-		WebAPIUtils.postSendCarryForm(formData);
-	},
-	postSendShipForm:function(formData){
-		WebAPIUtils.postSendShipForm(formData);
+	getStudentInfo:function(formData){
+		WebAPIUtils.getStudentInfo(formData);
 	}
 }
