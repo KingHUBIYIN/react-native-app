@@ -4,10 +4,15 @@ import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 
+import android.content.Intent; // <--- import
+import android.content.res.Configuration; // <--- import
+import com.github.yamill.orientation.OrientationPackage;  // <--- import
+
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends ReactActivity {
+public class MainActivity extends ReactActivity{
+	
 
     /**
      * Returns the name of the main component registered from JavaScript.
@@ -34,7 +39,16 @@ public class MainActivity extends ReactActivity {
     @Override
     protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
-            new MainReactPackage()
+            new MainReactPackage(),
+			new OrientationPackage(this)
         );
+    }
+	
+   @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Intent intent = new Intent("onConfigurationChanged");
+        intent.putExtra("newConfig", newConfig);
+        this.sendBroadcast(intent);
     }
 }

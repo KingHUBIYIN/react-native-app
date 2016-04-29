@@ -8,6 +8,8 @@ var {
   TouchableHighlight
 } = require('react-native');
 
+var Orientation = require('react-native-orientation');
+
 var navigator = null;
 var defaultConfig = Navigator.SceneConfigs.FadeAndroid;
 var RouteHistory = {
@@ -108,6 +110,11 @@ var Router = React.createClass({
           routes:routes,
           components:components
       })
+	  
+		// 判断横竖屏幕
+		var initial = Orientation.getInitialOrientation();
+		// 只允许竖屏
+		Orientation.lockToPortrait();
   },
   componentDidMount:function(){
       // 全局navigator赋值

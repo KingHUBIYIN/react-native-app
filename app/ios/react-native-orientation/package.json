@@ -1,0 +1,91 @@
+{
+  "_args": [
+    [
+      "react-native-orientation@^1.16.0",
+      "/Users/liuhong/workdir/edu_student_client/app"
+    ]
+  ],
+  "_cnpm_publish_time": 1461860108075,
+  "_from": "react-native-orientation@>=1.16.0 <2.0.0",
+  "_id": "react-native-orientation@1.16.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/react-native-orientation",
+  "_nodeVersion": "4.2.2",
+  "_npmOperationalInternal": {
+    "host": "packages-16-east.internal.npmjs.com",
+    "tmp": "tmp/react-native-orientation-1.16.0.tgz_1461860106856_0.274275942472741"
+  },
+  "_npmUser": {
+    "email": "yamill@gmail.com",
+    "name": "yamill"
+  },
+  "_npmVersion": "2.14.7",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "react-native-orientation",
+    "raw": "react-native-orientation@^1.16.0",
+    "rawSpec": "^1.16.0",
+    "scope": null,
+    "spec": ">=1.16.0 <2.0.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npm.taobao.org/react-native-orientation/download/react-native-orientation-1.16.0.tgz",
+  "_shasum": "caf9ab467c3fedbb8bb6bb1340adc4dc4e697361",
+  "_shrinkwrap": null,
+  "_spec": "react-native-orientation@^1.16.0",
+  "_where": "/Users/liuhong/workdir/edu_student_client/app",
+  "author": {
+    "email": "yamill@gmail.com",
+    "name": "Yamill Vallecillo",
+    "url": "github.com/yamill"
+  },
+  "bugs": {
+    "url": "https://github.com/yamill/react-native-orientation/issues"
+  },
+  "dependencies": {},
+  "description": "Listen to device orientation changes in react-native and set preferred orientation on screen to screen basis",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "noattachment": false,
+    "shasum": "caf9ab467c3fedbb8bb6bb1340adc4dc4e697361",
+    "size": 5328,
+    "tarball": "http://registry.npm.taobao.org/react-native-orientation/download/react-native-orientation-1.16.0.tgz"
+  },
+  "gitHead": "fb0850f298934bc2cb0ecbbc229a51fc4a11afeb",
+  "homepage": "https://github.com/yamill/react-native-orientation#readme",
+  "keywords": [
+    "android",
+    "ios",
+    "orientation",
+    "react-component",
+    "react-native"
+  ],
+  "license": "ISC",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "yamill",
+      "email": "yamill@gmail.com"
+    }
+  ],
+  "name": "react-native-orientation",
+  "optionalDependencies": {},
+  "peerDependencies": {
+    "react-native": ">=0.5"
+  },
+  "publish_time": 1461860108075,
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yamill/react-native-orientation.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.16.0"
+}
