@@ -10,5 +10,11 @@ module.exports = {
 	},
 	getStudentInfo:function(formData){
 		WebAPIUtils.getStudentInfo(formData);
+	},
+	postUserNewPassword:function(formData){
+		WebAPIUtils.postUserNewPassword(formData);
+	},
+	postUserFeedback:function(formData){
+		WebAPIUtils.postUserFeedback(formData);
 	}
 }

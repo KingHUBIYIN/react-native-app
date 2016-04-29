@@ -3,11 +3,10 @@ var React = require('react');
 var {
   View,
   Text,
-  Navigator,
-  TouchableOpacity,
-  TouchableHighlight
+  Navigator
 } = require('react-native');
 
+var {TouchableHighlight,TouchableOpacity} = require('./react-native-form');
 var Orientation = require('react-native-orientation');
 
 var navigator = null;
@@ -216,7 +215,7 @@ var Link = React.createClass({
         }
     },
     render:function(){
-        return (<TouchableHighlight underlayColor="#d8d8d8" onPress={this.handlePress} >
+        return (<TouchableHighlight onPress={this.handlePress}>
 					<View style={this.props.style}>
 						{ this.props.children }
 					</View>

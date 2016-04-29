@@ -48,11 +48,11 @@ var UserLoginView = React.createClass({
         var form_data = this.state.form_data;
         // 校验表单
         if(!form_data.username){
-            Alert.alert("提示","请输入用户名");
+            Alert.alert("提示","请输入用户名",[{text: '确定', onPress: () => {}}]);
             return;
         }
         if(!form_data.password){
-            Alert.alert("提示","请输入密码");
+            Alert.alert("提示","请输入密码",[{text: '确定', onPress: () => {}}]);
             return;
         }
         WebAPIActions.userLogin(form_data);

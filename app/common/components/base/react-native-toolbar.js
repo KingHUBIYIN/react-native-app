@@ -4,12 +4,12 @@ var {
     View,
     Text,
     Image,
-    TouchableOpacity,
     StyleSheet
 } = require('react-native');
 var Dimensions = require('./react-native-dimensions');
 var {height, width} = Dimensions.get('window');
 var colorUtils = require('../../utils/color-utils')
+var {TouchableOpacity} = require('./react-native-form');
 // navIcon,logo,title,titleColor,subtitle,subtitleColor,actions
 // name title icon show showWithText
 var ActionButton = React.createClass({

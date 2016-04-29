@@ -4,7 +4,7 @@ var localStorageUtils = require('./local-storage-utils');
 var {History} = require('../components/base/react-native-router')
 var {Alert} = require('react-native')
 
-const STUDENT_URL = 'http://edu.idealsee.com';
+const STUDENT_URL = 'http://testedu.idealsee.com';
 
 var Ajax = function(options){
 	// change data
@@ -84,6 +84,32 @@ module.exports = {
 			success:function(res){
 				localStorageUtils.setData("user_info",formData);
 				systemActions.postedUserLoginForm(formData);
+			},
+			error:function(status,msg){
+				helper.handleErrorMsgChange({status,msg});
+			}
+		})
+	},
+	postUserNewPassword:function(formData){
+		Ajax({
+			url:"/s/password_reset/",
+			type:"post",
+			data:formData,
+			success:function(res){
+				systemActions.postedUserNewPassword(res.data);
+			},
+			error:function(status,msg){
+				helper.handleErrorMsgChange({status,msg});
+			}
+		})
+	},
+	postUserFeedback:function(formData){
+		Ajax({
+			url:"/api/v1/students/feedback",
+			type:"post",
+			data:formData,
+			success:function(res){
+				systemActions.postedUserFeedback(res.data);
 			},
 			error:function(status,msg){
 				helper.handleErrorMsgChange({status,msg});

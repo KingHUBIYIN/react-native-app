@@ -5,8 +5,10 @@ var {
     View,
     Navigator,
 	StyleSheet,
-	Image
+	Image,
+	Alert
 } = require('react-native')
+var {TouchableHighlight} = require('../base/react-native-form');
 var Dimensions = require('../base/react-native-dimensions');
 var {Link,History} = require('../base/react-native-router');
 var TabBars = require('../base/tabbars');
@@ -23,44 +25,54 @@ var HomeListView = React.createClass({
 	onNavIconPress:function(){
 		History.popRoute();
 	},
+	onClearStorage:function(){
+		Alert.alert("提示","清除缓存成功",[{text: '确定', onPress: () => {}}]);
+	},
+	onUpgradeVersion:function(){
+		Alert.alert("提示","亲，您的版本已经是最新了～",[{text: '确定', onPress: () => {}}]);
+	},
     render:function(){
         return (<ContentContainer>
                         <ToolBar navIcon={{title:"<我"}}  title="设置" onNavIconPress={this.onNavIconPress}></ToolBar>
                         <RowContainer style={styles.row}>
-								<View style={styles.view}>
+								<Link style={styles.view} name="/settings/password">
 									<Text style={[styles.title,ColorUtils.text2]}>修改密码</Text>
 									<View style={styles.textRow}>
 									</View>
 									<Image source={btn_next_normal} style={styles.next}/>
-								</View>
+								</Link>
 								<Splitter style={styles.splitter}/>
-								<View style={styles.view}>
+								<Link style={styles.view} name="/settings/feedback">
 									<Text style={[styles.title,ColorUtils.text2]}>意见反馈</Text>
 									<View style={styles.textRow}>
 									</View>
 									<Image source={btn_next_normal} style={styles.next}/>
-								</View>
+								</Link>
 								<Splitter style={styles.splitter}/>
-								<View style={styles.view}>
-									<Text style={[styles.title,ColorUtils.text2]}>版本更新</Text>
-									<View style={styles.textRow}>
+								<TouchableHighlight underlayColor="#d8d8d8" onPress={this.onUpgradeVersion}>
+									<View style={styles.view}>
+										<Text style={[styles.title,ColorUtils.text2]}>版本更新</Text>
+										<View style={styles.textRow}>
+										</View>
+										<Image source={btn_next_normal} style={styles.next}/>
 									</View>
-									<Image source={btn_next_normal} style={styles.next}/>
-								</View>
+								</TouchableHighlight>
 								<Splitter style={styles.splitter}/>
-								<View style={styles.view}>
-									<Text style={[styles.title,ColorUtils.text2]}>清除缓存</Text>
-									<View style={styles.textRow}>
+								<TouchableHighlight underlayColor="#d8d8d8" onPress={this.onClearStorage}>
+									<View style={styles.view}>
+										<Text style={[styles.title,ColorUtils.text2]}>清除缓存</Text>
+										<View style={styles.textRow}>
+										</View>
+										<Image source={btn_next_normal} style={styles.next}/>
 									</View>
-									<Image source={btn_next_normal} style={styles.next}/>
-								</View>
+								</TouchableHighlight>
 							</RowContainer> 
 							<RowContainer style={styles.row}>
-								<View style={styles.view}>
+								<Link style={styles.view} name="/settings/aboutus">
 									<Text style={[styles.title,ColorUtils.text2]}>关于我们</Text>
 									<View style={styles.textRow}></View>
 									<Image source={btn_next_normal} style={styles.next}/>
-								</View>
+								</Link>
 						</RowContainer>   
                 </ContentContainer>)
     }

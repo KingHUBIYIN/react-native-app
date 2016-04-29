@@ -29,6 +29,7 @@ module.exports = {
 		return height*fontScale;
 	},
 	size:{
+		"1":1*fontScale,
 		"2":2*fontScale,
 		"4":4*fontScale,
 		"5":5*fontScale,

@@ -5,11 +5,10 @@ var {
     ScrollView,
     View,
     Text,
-    TouchableHighlight,
     TouchableOpacity,
     Navigator
 } = require('react-native');
-
+var {TouchableHighlight} = require('../base/react-native-form');
 var {SystemContainer,ContentContainer} = require('../base/system-container')
 var {History} = require('../base/react-native-router');
 var ToolBar = require('../base/react-native-toolbar');

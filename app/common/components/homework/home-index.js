@@ -9,7 +9,6 @@ var {
     ScrollView,
     ListView,
     StyleSheet,
-    TouchableHighlight
 } = require('react-native')
 var Dimensions = require('../base/react-native-dimensions');
 var {Link,History} = require('../base/react-native-router');

@@ -28,6 +28,18 @@ module.exports = {
             data:data
         })
     },
+	postedUserNewPassword:function(data){
+        SystemDispatcher.dispatch({
+            type:ActionTypes.POSTED_USER_NEW_PASSWORD,
+            data:data
+        })
+	},
+	postedUserFeedback:function(data){
+        SystemDispatcher.dispatch({
+            type:ActionTypes.POSTED_USER_FEEDBACK,
+            data:data
+        })
+	},
 	receivedProvinces:function(data){
         SystemDispatcher.dispatch({
             type:ActionTypes.RECEIVED_PROVINCES,

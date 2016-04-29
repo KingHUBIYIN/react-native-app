@@ -44,7 +44,7 @@ var UserSettingsView = require('./user_settings/settings')
 var UserSettingsIndex = require('./user_settings/settings-index')
 var UserUpdatePwdView = require('./user_settings/update-pwd')
 var UserFeedBackView = require('./user_settings/feedback')
-
+var UserAboutUsView = require('./user_settings/aboutus')
 // other form
 var FormView = require('./form/form')
 var FormAddress =  require('./form/form-address')
@@ -95,8 +95,9 @@ var RouterApp = React.createClass({
                         </Route>
                         <Route component={UserSettingsView} path="settings">
                                 <Route component={UserSettingsIndex} path="index"></Route>
-								<Route component={UserUpdatePwdView} path="login"></Route>
-	                            <Route component={UserFeedBackView} path="welcome"></Route>
+								<Route component={UserUpdatePwdView} path="password"></Route>
+	                            <Route component={UserFeedBackView} path="feedback"></Route>
+								<Route component={UserAboutUsView} path="aboutus"></Route>
                         </Route>
 						<Route component={FormView} path="form">
 							<Route component={FormAddress} path="msg"></Route>

@@ -13,6 +13,29 @@ var {
 } = require('react-native');
 var Dimensions = require('./react-native-dimensions');
 var Platform = require('./react-native-platform');
+// TouchableHighlight ...props
+var NewTouchableHighlight = React.createClass({
+    render:function(){
+        var {delayLongPress,delayPressIn,delayPressOut,activeOpacity,underlayColor,...props} = this.props;
+		delayLongPress = delayLongPress?delayLongPress:0;
+		delayPressIn = delayPressIn?delayPressIn:0;
+		delayPressOut = delayPressOut?delayPressOut:0;
+		activeOpacity = activeOpacity?activeOpacity:0.5;
+		underlayColor = underlayColor?underlayColor:"#d8d8d8";
+        return (<TouchableHighlight delayLongPress={delayLongPress} delayPressIn={delayPressIn} delayPressOut={delayPressOut} activeOpacit={activeOpacity} underlayColor={underlayColor} {...props}></TouchableHighlight>)
+    }
+})
+var NewTouchableOpacity = React.createClass({
+    render:function(){
+        var {delayLongPress,delayPressIn,delayPressOut,activeOpacity,underlayColor,...props} = this.props;
+		delayLongPress = delayLongPress?delayLongPress:0;
+		delayPressIn = delayPressIn?delayPressIn:0;
+		delayPressOut = delayPressOut?delayPressOut:0;
+		activeOpacity = activeOpacity?activeOpacity:0.5;
+		underlayColor = underlayColor?underlayColor:"#d8d8d8";
+        return (<TouchableOpacity delayLongPress={delayLongPress} delayPressIn={delayPressIn} delayPressOut={delayPressOut} activeOpacit={activeOpacity} underlayColor={underlayColor} {...props}></TouchableOpacity>)
+    }
+})
 // props
 // {name:xxx,icon:xxx,title:xxx,style:{},onPress:function(){} }
 var Button = React.createClass({
@@ -41,17 +64,16 @@ var Button = React.createClass({
 		var textWidth  =  screenWidth - _imgStyle.width -Dimensions.size["4"]*2;
 		var textStyle = Platform.isIOS ?[styles.buttonText,titleStyle] : [styles.buttonText,{lineHeight:height},titleStyle];
 		var _underlayColor=underlayColor?underlayColor:"transparent";
-        return (<TouchableHighlight underlayColor={_underlayColor} onPress={this.onPress}>
+        return (<NewTouchableHighlight underlayColor={_underlayColor} onPress={this.onPress}>
 						<View style={[styles.buttonContainer,{height:height},style]} {...props}>
 							{img}
 							<View style={[styles.buttonTextContainer,{height:height, justifyContent:textAlign?textAlign:"flex-start", width:textWidth}]}>
 								<Text style={textStyle}>{this.props.title}</Text>
 							</View>
 						</View>
-                </TouchableHighlight>)
+                </NewTouchableHighlight>)
     }
 })
-		
 var ToggleButton = React.createClass({
 	getInitialState:function(){
 		return {
@@ -74,11 +96,13 @@ var ToggleButton = React.createClass({
 	}
 })
 
+
+
 // like TextInput       
 var TextArea = React.createClass({
     render:function(){
         var {multiline,...props} = this.props;
-        return (<TextInput multiline={true} {...props}></TextInput>)
+        return (<NewTextInput multiline={true} {...props}></NewTextInput>)
     }
 })
 // DatePicker
@@ -127,3 +151,5 @@ module.exports.TextInput = NewTextIntput;
 module.exports.TextArea = TextArea;
 module.exports.Picker = Picker;
 module.exports.Switch = Switch;
+module.exports.TouchableHighlight = NewTouchableHighlight;
+module.exports.TouchableOpacity = NewTouchableOpacity;
