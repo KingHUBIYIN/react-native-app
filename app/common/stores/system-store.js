@@ -96,6 +96,10 @@ SystemStore.dispatchToken = SystemDispatcher.register(function(action){
             _user_info = action.data;
             SystemStore.emitChange(EventTypes.POSTED_USER_LOGIN_FORM);
             break;
+		case ActionTypes.POSTED_USER_LOGOUT_FORM:
+			_user_info = action.data;
+            SystemStore.emitChange(EventTypes.POSTED_USER_LOGOUT_FORM);
+            break;
 		case ActionTypes.RECEIVED_USER_INFO:
             _user_info = action.data;
             SystemStore.emitChange(EventTypes.RECEIVED_USER_INFO);
@@ -171,7 +175,6 @@ SystemStore.dispatchToken = SystemDispatcher.register(function(action){
 			SystemStore.emitChange(EventTypes.RECEIVED_MY_SEND_INFO);
 			SystemStore.emitChange(EventTypes.POSTED_SEND_CARRY_FORM);
 			break;
-
     }
     
 })

@@ -73,8 +73,17 @@ module.exports = {
 		})
     },
 	userLogout:function(formData){
-		localStorageUtils.setData("user_info",{});
-		systemActions.postedUserLoginForm({});
+		Ajax({
+			url:"/s/logout/",
+			type:"post",
+			success:function(res){
+				localStorageUtils.setData("user_info",{});
+				systemActions.postedUserLogoutForm({});
+			},
+			error:function(status,msg){
+				helper.handleErrorMsgChange({status,msg});
+			}
+		})
 	},
 	userLogin:function(formData){
 		Ajax({

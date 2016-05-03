@@ -206,13 +206,14 @@ var Route = React.createClass({
 });
 var Link = React.createClass({
     handlePress:function(e){
+		// 先 生效点击事件
+        if(this.props.onPress){
+            this.props.onPress(e);
+        }
         var name = this.props.name;
         var index = this.props.index || 0;
         var config = this.props.config || Navigator.SceneConfigs.PushFromRight;
         RouteHistory.pushRoute(name,index,config);
-        if(this.props.onPress){
-            this.props.onPress(e);
-        }
     },
     render:function(){
         return (<TouchableHighlight onPress={this.handlePress}>

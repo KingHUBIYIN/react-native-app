@@ -18,6 +18,7 @@ var ToolBar = require('../base/react-native-toolbar');
 var SystemStore = require('../../stores/system-store');
 var {EventTypes} = require('../../constants/system-constants');
 var ColorUtils = require('../../utils/color-utils');
+var WebAPIActions = require('../../actions/web-api-actions')
 
 var btn_next_normal = require('../../images/btn_next_normal.png');
 
@@ -30,6 +31,10 @@ var HomeListView = React.createClass({
 	},
 	onUpgradeVersion:function(){
 		Alert.alert("提示","亲，您的版本已经是最新了～",[{text: '确定', onPress: () => {}}]);
+	},
+	setUserLogout:function(e){
+		SystemStore.clearUserInfo();
+		WebAPIActions.userLogout();
 	},
     render:function(){
         return (<ContentContainer>
@@ -74,6 +79,11 @@ var HomeListView = React.createClass({
 									<Image source={btn_next_normal} style={styles.next}/>
 								</Link>
 						</RowContainer>   
+						<View style={[styles.row,styles.logoutRow]}>
+							<Link style={styles.logout} name="/user/login" onPress={this.setUserLogout}>
+								<Text style={[styles.title,styles.logoutText]}>退出系统</Text>
+							</Link>
+						</View>
                 </ContentContainer>)
     }
 })
@@ -94,7 +104,8 @@ var styles = StyleSheet.create({
 	},
 	title:{
 		fontSize:Dimensions.size["7"],
-		width:Dimensions.size["30"]
+		width:Dimensions.size["30"],
+		color:"#fff"
 	},
 	text:{
 		fontSize:Dimensions.size["5"]
@@ -114,6 +125,24 @@ var styles = StyleSheet.create({
 		width:Dimensions.size["8"],
 		height:Dimensions.size["8"]
 	},
+	logoutRow:{
+		width:Dimensions.screenWidth-Dimensions.size["16"],
+		height:Dimensions.size["20"],
+		marginLeft:Dimensions.size["8"]
+	},
+	logout:{
+		borderRadius:Dimensions.size["1"],
+		backgroundColor:"#F85934",
+		width:Dimensions.screenWidth-Dimensions.size["16"],
+		height:Dimensions.size["20"],
+		flexDirection:"row",
+		justifyContent:"center",
+		alignItems:"center",
+		
+	},
+	logoutText:{
+		textAlign:"center"
+	}
 })
 	
 module.exports = HomeListView;

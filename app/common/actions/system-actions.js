@@ -28,6 +28,12 @@ module.exports = {
             data:data
         })
     },
+	postedUserLogoutForm:function(data){
+        SystemDispatcher.dispatch({
+            type:ActionTypes.POSTED_USER_LOGOUT_FORM,
+            data:data
+        })
+	},
 	postedUserNewPassword:function(data){
         SystemDispatcher.dispatch({
             type:ActionTypes.POSTED_USER_NEW_PASSWORD,
