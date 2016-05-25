@@ -76,5 +76,16 @@ module.exports = {
             data:data
         })
 	},
-
+    receivedAllData:function(data){
+        SystemDispatcher.dispatch({
+            type:ActionTypes.RECEIVED_ALL_DATA,
+            data:data
+        })
+    },
+    receivedStudentMeta:function(data){
+        SystemDispatcher.dispatch({
+            type:ActionTypes.RECEIVED_STUDENT_META,
+            data:data
+        })
+    }
 }

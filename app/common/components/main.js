@@ -55,6 +55,12 @@ var {Route,Router,History} = require('./base/react-native-router')
 var SystemStore = require('../stores/system-store')
 var {EventTypes} = require('../constants/system-constants')
 
+var WebAPIUtils = require('../utils/web-api-utils')
+//进入系统请求全部数据
+WebAPIUtils.getAllData();
+WebAPIUtils.getStudentMeta();
+
+
 var MainApp = React.createClass({
     render:function(){
         return (<View style={styles.main}>
@@ -68,7 +74,7 @@ var RouterApp = React.createClass({
         return (<Router defaultRoute="/user/welcome" path="/" component={MainApp}>
                         <Route component={HomeView} path="home">
                                 <Route component={HomeIndexView} path="index"></Route>
-								<Route component={HomeListView} path="list"></Route>
+								<Route component={HomeListView} path="list/:subject"></Route>
 								<Route component={HomeTopicView} path="topic"></Route>
 								<Route component={HomeTopicDetails} path="details"></Route>
                         </Route>

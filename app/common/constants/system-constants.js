@@ -15,6 +15,8 @@ module.exports = {
 		RECEIVED_CATEGORY:null,
 		CHANGED_CATEGORY_FORM:null,
 		CHANGED_DATE_PICKER_FORM:null,
+        RECEIVED_ALL_DATA:null,
+        RECEIVED_STUDENT_META:null
     }),
     EventTypes:keyMirror({
 		RECEIVED_ERROR_MSG:null,
@@ -29,5 +31,7 @@ module.exports = {
 		RECEIVED_CATEGORY:null,
 		CHANGED_CATEGORY_FORM:null,
 		CHANGED_DATE_PICKER_FORM:null,
+        RECEIVED_ALL_DATA:null,
+        RECEIVED_STUDENT_META:null
     })
 }

@@ -29,6 +29,7 @@ module.exports = {
 		return height*fontScale;
 	},
 	size:{
+        "0.5":0.5*fontScale,
 		"1":1*fontScale,
 		"2":2*fontScale,
 		"4":4*fontScale,
@@ -56,6 +57,11 @@ module.exports = {
 		"54":54*fontScale,
 		"60":60*fontScale,
 		"64":64*fontScale,
-		"66":66*fontScale
+		"66":66*fontScale,
+		"70":70*fontScale,
+		"76":76*fontScale,
+		"96":96*fontScale,
+		"200":200*fontScale,
+		"250":250*fontScale,
 	}
 }

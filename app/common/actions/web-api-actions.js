@@ -16,5 +16,13 @@ module.exports = {
 	},
 	postUserFeedback:function(formData){
 		WebAPIUtils.postUserFeedback(formData);
-	}
+	},
+    //获取试卷列表
+    getAllData:function(formData){
+        WebAPIUtils.getAllData(formData);
+    },
+    //获取meta信息
+    getStudentMeta:function(formData){
+         WebAPIUtils.getStudentMeta(formData);
+    }
 }

@@ -133,5 +133,33 @@ module.exports = {
             }
 			helper.handleUserDataChange(data.user_info);
         });
+    },
+     //获取试卷列表
+    getAllData:function(formData){
+        Ajax({
+			url:"/custom/student/get_paper_list",
+			type:"get",
+			data:formData,
+			success:function(res){
+				systemActions.receivedAllData(res.data);
+			},
+			error:function(status,msg){
+				helper.handleErrorMsgChange({status,msg});
+			}
+		})
+    },
+    //获取meta信息
+     getStudentMeta:function(formData){
+        Ajax({
+			url:"/custom/student/meta",
+			type:"get",
+			data:formData,
+			success:function(res){
+				systemActions.receivedStudentMeta(res.data);
+			},
+			error:function(status,msg){
+				helper.handleErrorMsgChange({status,msg});
+			}
+		})
     }
 }
