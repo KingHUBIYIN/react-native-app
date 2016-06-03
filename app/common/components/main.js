@@ -73,11 +73,12 @@ var RouterApp = React.createClass({
 								<Route component={HomeTopicDetails} path="details"></Route>
                         </Route>
                         <Route component={AnalysisView} path="analysis">
-                                <Route component={AnalysisIndexView} path="index"></Route>
-								<Route component={AnalysisLineView} path="line"></Route>
-								<Route component={AnalysisPointView} path="point"></Route>
-								<Route component={AnalysisPointDetails} path="details"></Route>
-								<Route component={AnalysisPieView} path="pie"></Route>
+                                <Route component={AnalysisIndexView} path="index">
+									<Route component={AnalysisLineView} path="line"></Route>
+									<Route component={AnalysisPointView} path="point"></Route>
+									<Route component={AnalysisPointDetails} path="details"></Route>
+									<Route component={AnalysisPieView} path="pie"></Route>
+								</Route>
                         </Route>
                         <Route component={WrongView} path="wrong">
                                  <Route component={WrongIndexView} path="index"></Route>
