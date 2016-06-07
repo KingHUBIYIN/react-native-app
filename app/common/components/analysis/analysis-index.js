@@ -17,11 +17,8 @@ var {EventTypes} = require('../../constants/system-constants');
 var AnalysisIndexView = React.createClass({
     render:function(){
         return (<ContentContainer>
-                        <ToolBar title="学习曲线" subtitle="" actions={[]}></ToolBar>
-                        <View>
-								<Text>{"This is 'HomeWork Topic Details Page'"}</Text>		
-						</View>   
-                        <TabBars name="/analysis/index"></TabBars>
+                        {this.props.children}
+                        <TabBars name="/analysis/index/line"></TabBars>
                 </ContentContainer>)
     }
 })

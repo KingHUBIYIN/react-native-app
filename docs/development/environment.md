@@ -136,3 +136,8 @@
 
 
 
+
+#### 升级ReactNative 0.26
+
+	npm install -g rnpm && npm install rnpm-plugin-upgrade@0.26 --save-dev
+	rnpm upgrade
