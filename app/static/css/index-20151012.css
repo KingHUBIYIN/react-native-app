@@ -1,0 +1,109 @@
+body{
+    margin: 0px;
+}
+p{
+    margin: 7px;
+}
+body,*{
+    font-family:'微软雅黑',Helvetica,sans-serif;
+    font-size: 14px;
+}
+
+.col-xs-12,.row{
+    padding: 0px;
+    margin: 0px;
+}
+.jumbotron{
+    width: 100%;
+    margin:0px;
+    padding: 0px;
+}
+.jumbotron p{
+    font-size: 14px;
+    margin: 5px 0px;
+}
+
+#jumbotron-sun{
+    padding-top: 250px;
+    background-color: #000;
+}
+@media screen and (max-width: 1366px) { /*当屏幕尺寸小于1366px时，应用下面的CSS样式*/
+      #jumbotron-sun {
+        padding-top: 150px;
+      }
+}
+#jumbotron-sun img{
+    margin: 0px auto;
+}
+#jumbotron-eye{
+    background: -moz-linear-gradient(top, #000 0%,#444 15%, #888 25%,#d4d4d4 40%,#ccc 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#000), color-stop(15%,#333), color-stop(25%,#888), color-stop(40%,#d4d4d4),color-stop(100%,#ccc));
+    background: -webkit-linear-gradient(top, #000 0%,#444 15%, #888 25%,#d4d4d4 40%,#ccc 100%);
+    background: -o-linear-gradient(top, #000 0%,#444 15%, #888 25%,#d4d4d4 40%,#ccc 100%);
+    background: -ms-linear-gradient(top, #000 0%,#444 15%, #888 25%,#d4d4d4 40%,#ccc 100%);
+    background: linear-gradient(to bottom, #000 0%,#444 15%, #888 25%,#d4d4d4 40%,#ccc 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000', endColorstr='#ccc',GradientType=0 );
+}
+#jumbotron-info{
+    background-color: #ccc;
+}
+.btn-img{
+    display:inline-block;
+    cursor: pointer;
+    margin: 0px 10px;
+}
+.btn-weibo{
+    background:url('../images/20151012/weibo-btn.png');
+    width:97px;
+    height:97px;
+}
+/*
+.btn-weibo:hover{
+    background:url('../images/weibo-hover.png');
+}
+*/
+.btn-weixin{
+    background:url('../images/20151012/weixin-btn.png');
+    width:97px;
+    height:97px;
+}
+/*
+.btn-weixin:hover{
+    background:url('../images/weixin-hover.png');
+}
+*/
+.btn-home{
+    background:url('../images/20151012/idealsee-btn.png');
+    width:277px;
+    height:62px;
+}
+.btn-home:hover{
+    background:url('../images/20151012/idealsee-btn-hover.png');
+}
+.form-control{
+    margin: 0px auto;
+    border-radius: 0px;
+    border: 1px solid #558adb;
+    background-color: #ebebec;
+}
+
+#btnSend{
+    background-color: #ddd;
+    border-radius: 40px;
+    height: 36px;
+    border: 2px solid #5b82bd;
+    width:180px;
+    margin-top: 25px;
+    margin-bottom: 45px;
+}
+#btnSend:hover{
+    background-color: #ebebec;
+}
+#wordRow{
+    margin-bottom:200px;
+}
+@media screen and (max-width: 1366px) { /*当屏幕尺寸小于1366px时，应用下面的CSS样式*/
+      #wordRow {
+        margin-bottom: 120px;
+      }
+}

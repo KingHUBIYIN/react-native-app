@@ -121,9 +121,9 @@ var ToolBar = React.createClass({
 });
 var styles = StyleSheet.create({
     toolbar:{
-        flexDirection:"row",
+        flexDirection:"row",//子项目从左向有对齐
         justifyContent:"space-around",// 水平方向
-        alignItems:"center",
+        alignItems:"center",//垂直方向
         width:width,
         borderBottomColor:"#ccc",
         borderBottomWidth:0.5,

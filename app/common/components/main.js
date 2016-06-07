@@ -31,6 +31,9 @@ var WrongPracticeView = require('./wrongbook/wrong-practice');
 var WrongTopicView = require('./wrongbook/wrong-topic');
 var WrongSubjectView = require('./wrongbook/subject-list');
 var WrongPracticeEnd = require('./wrongbook/practice-end');
+var WrongChoiceAll = require('./wrongbook/wrong_choice_all');
+var WrongChoiceChapter = require('./wrongbook/wrong_choice_chapter');
+var WrongMain = require('./wrongbook/wrong_main');
 // user
 var UserView = require('./user/user')
 var UserIndexView = require('./user/user-index')
@@ -75,8 +78,8 @@ var RouterApp = React.createClass({
                         <Route component={HomeView} path="home">
                                 <Route component={HomeIndexView} path="index"></Route>
 								<Route component={HomeListView} path="list/:subject"></Route>
-								<Route component={HomeTopicView} path="topic"></Route>
-								<Route component={HomeTopicDetails} path="details"></Route>
+								<Route component={HomeTopicView} path="topic/:subject/:answer_sheet_id"></Route>
+								<Route component={HomeTopicDetails} path="details/:subject/:answer_sheet_id/:topic_no"></Route>
                         </Route>
                         <Route component={AnalysisView} path="analysis">
                                 <Route component={AnalysisIndexView} path="index"></Route>
@@ -86,7 +89,11 @@ var RouterApp = React.createClass({
 								<Route component={AnalysisPieView} path="pie"></Route>
                         </Route>
                         <Route component={WrongView} path="wrong">
-                                 <Route component={WrongIndexView} path="index"></Route>
+                                 <Route component={WrongIndexView} path="index/:subject">
+                                        <Route component={WrongChoiceAll} path="ChoiceAll"></Route>
+                                        <Route component={WrongChoiceChapter} path="ChoiceChapter"></Route>
+                                        <Route component={WrongMain} path="WrongMain/:answer_sheet_id"></Route>
+                                 </Route>
 								 <Route component={WrongPracticeView} path="practice"></Route>
 								 <Route component={WrongTopicView} path="topic"></Route>
 								 <Route component={WrongSubjectView} path="subject"></Route>

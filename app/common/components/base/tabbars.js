@@ -26,7 +26,7 @@ var TabBars = React.createClass({
         return (<TabBar barColor="#fff">
                         <Tab selected={this.props.name=="/home/index"} icon={ico_homework_normal} selectedIcon={ico_homework_select} name="/home/index" title="首页" onPress={this._onPress}></Tab>
                         <Tab selected={this.props.name=="/analysis/index"} icon={ico_analysis_normal} selectedIcon={ico_analysis_select}  name="/analysis/index"   title="分析" onPress={this._onPress}></Tab>
-                        <Tab selected={this.props.name=="/wrong/index"} icon={ico_wrong_normal} selectedIcon={ico_wrong_select}  name="/wrong/index"  title="错题本" onPress={this._onPress}></Tab>
+                        <Tab selected={this.props.name=="/wrong/subject"} icon={ico_wrong_normal} selectedIcon={ico_wrong_select}  name="/wrong/subject"  title="错题本" onPress={this._onPress}></Tab>
                         <Tab selected={this.props.name=="/user/index"} icon={ico_user_normal} selectedIcon={ico_user_select}  name="/user/index" title="我" onPress={this._onPress}></Tab>
                     </TabBar>)
     }

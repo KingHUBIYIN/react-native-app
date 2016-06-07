@@ -1,0 +1,25 @@
+.publish-btn-normal {
+    background: url(../img/topic_list/btn_publish_normal_jp.png) no-repeat;
+}
+.publish-btn-normal:hover {
+    background: url(../img/topic_list/btn_publish_hover_jp.png) no-repeat; 
+}
+.publish-btn-disabled {
+    background: url(../img/topic_list/btn_publish_disabled_jp.png) no-repeat; 
+}
+#layer-btn {
+    background: url(../img/topic_list/btn_layer_normal_jp.png) no-repeat;
+    width: 72px;
+}
+#layer-btn:hover {
+    background: url(../img/topic_list/btn_layer_hover_jp.png) no-repeat;
+    width: 72px;
+}
+.preview-btn {
+    background: url(../img/topic_list/btn_preview_normal_jp.png) no-repeat;
+    width: 111px;
+}
+.preview-btn:hover {
+    background: url(../img/topic_list/btn_preview_hover_jp.png) no-repeat;
+    width: 111px;
+}

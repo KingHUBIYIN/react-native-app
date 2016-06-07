@@ -1,0 +1,97 @@
+body{
+    font-family:'微软雅黑','Microsoft Yahei',Helvetica,Arial,sans-serif;
+/*    font-family:FZYouHeiJW;*/
+    font-weight: lighter;
+    position: relative;
+    left: 0px;
+    top: 0px;
+    font-smooth:always;
+    -webkit-font-smoothing: antialiased;
+}
+.form-control{
+    height: 36px;
+}
+.modal-footer{
+    border-top: 0px solid transparent;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+}
+.footer-copy{
+    font-size: 0.7em;
+}
+.logo2-png{
+        background-image:url('/static/images/all_icon.png');
+        background-position: -323px -143px;
+        height:14px;
+        width: 121px;
+}
+.close .close_span{
+    width: 28px;
+    height: 28px;
+    display: block;
+    background-image: url('/static/images/all_icon.png');
+    background-position:-376px -217px; 
+}
+.close .close_span:hover{
+    background-image: url('/static/images/all_icon.png');
+    background-position:-404px -217px; 
+}
+#aSelectLanguage{
+    cursor: pointer;
+    max-width: 80px;
+}
+.select-diglog{
+    position: absolute;
+    left:-30px;
+    bottom: 50px;
+    background-image: url("/static/images/select_language/language-back.png");
+    height: 137px;
+    width: 138px;
+    padding: 30px 20px;
+}
+.select-diglog ul {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+.select-li{
+    line-height: 28px;
+    margin:5px 4px;
+    width:90px;
+    height: 28px;
+    cursor: pointer;
+}
+.select-li img ,.select-li span{
+    padding-left: 7px;
+}
+
+.select-li:hover,.select-li.active{
+    background-color: #b8bbbf;
+    border-radius: 4px;
+    color: #fff;
+}
+.title-text {
+    color: #333333;
+}
+.normal-text {
+    color: #666666;
+}
+.hint-text {
+    color: #999999;
+}
+.fleft {
+    float: left;
+}
+.fright {
+    float: right;
+}
+.left {
+    text-align: left;
+}
+.center {
+    text-align: center;
+}
+.right {
+    text-align: right;
+}

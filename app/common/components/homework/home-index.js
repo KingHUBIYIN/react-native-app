@@ -32,15 +32,10 @@ var ico_english = require("../../images/ico_English.png");
 var ico_subject = require("../../images/btn_next_normal.png");
 
 var Subject = React.createClass({
-	onPress:function(hash){
-        if(this.props.onPress){
-            this.props.onPress(this.props.hash);
-        }
-	},
 	render:function(){
-        var {title,style,source,hash,onPress,...props} = this.props; 
+        var {title,style,source,hash,...props} = this.props; 
         return(
-            <TouchableOpacity style = {styles.row} onPress = {this.onPress} {...props} >
+            <Link style = {styles.row} name={hash}  {...props} >
                     <View>
                         <Image source={source} style = {styles.subjectImage}/>
                     </View>
@@ -49,15 +44,12 @@ var Subject = React.createClass({
                         <View style = {styles.textView}></View>
                         <Image source={ico_subject} style = {styles.icoSubject} />
                     </View>
-            </TouchableOpacity>
+            </Link>
         )
 	}
 })
 
 var HomeIndexView = React.createClass({
-    _onJumpSubject:function(hash){
-        History.pushRoute(hash);
-    },
     render:function(){
         var style = styles.unBorder;
         return (<ContentContainer>
@@ -67,9 +59,9 @@ var HomeIndexView = React.createClass({
                                     <Image source={back_Image} style = {styles.backImage}/>
                             </View>
                             <RowContainer style={[styles.rowContainer,styles.ScrollView]}>
-                                <Subject source = {ico_math} hash = "/home/list/math" title = "数学" onPress = {this._onJumpSubject} />
-                                <Subject source = {ico_chinese} hash = "/home/list/chinese" title = "语文" onPress = {this._onJumpSubject} />
-                                <Subject source = {ico_english} hash = "/home/list/english" title = "英语" style = {style} onPress = {this._onJumpSubject} />
+                                <Subject source = {ico_math} hash = "/home/list/math" title = "数学"  />
+                                <Subject source = {ico_chinese} hash = "/home/list/chinese" title = "语文" />
+                                <Subject source = {ico_english} hash = "/home/list/english" title = "英语" style = {style}  />
                             </RowContainer>
                             <View style = {styles.blank}></View>
                         </ScrollView>
@@ -92,14 +84,14 @@ var styles = StyleSheet.create({
     },
     rowContainer:{
         width: Dimensions.screenWidth,
-        marginTop:Dimensions.size["5"],
-        paddingLeft: Dimensions.size["6"]
+        marginTop:Dimensions.size["5"]
     },
     row:{
         height: Dimensions.size["32"],
         flexDirection:"row",
         justifyContent:"flex-start",
-        alignItems:"center"
+        alignItems:"center",
+        paddingLeft:Dimensions.size["6"]
     },
     subjectImage:{
         width: Dimensions.size["24"],

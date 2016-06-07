@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript" src="files/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript" src="files/keyshot.js"></script>
+</head>
+<body>
+	<div id="keyshot" style="width:700px;margin:0px auto;"></div>
+	<script>
+		var imgArr  = [];
+		for(var i=0;i<61;i++){
+		   imgArr.push("0_"+i+".png");
+		}
+		var $keyshot = $('#keyshot');
+		$keyshot.keyshotVR({imgArr:imgArr,playInterval:90});
+		$keyshot.keyshotVR('hide');
+		$keyshot.keyshotVR('play');
+		setTimeout(function(){
+			$keyshot.keyshotVR('show');
+			$keyshot.keyshotVR('pause');
+			$keyshot.keyshotVR('setPercent',0);
+		},60*90);
+	</script>
+</body>
+</html>

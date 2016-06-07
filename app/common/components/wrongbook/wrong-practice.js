@@ -19,7 +19,7 @@ var HomeListView = React.createClass({
         return (<ContentContainer>
                         <ToolBar navIcon={{}} logo={{icon:require('../../images/logo.png')}} title="我的作业" subtitle="" actions={[]}></ToolBar>
                         <View>
-								<Text>{"This is 'HomeWork Topic Details Page'"}</Text>		
+								<Text>{"This is 'Wrongbook Wrong Pratice Page'"}</Text>		
 						</View>   
                         <TabBars name="/home/index"></TabBars>
                 </ContentContainer>)
