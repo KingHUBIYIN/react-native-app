@@ -27,6 +27,35 @@ var NavBars = require('../base/navbars');
 var btn_next_press = require("../../images/btn_next_press.png");
 var btn_last_press = require("../../images/btn_last_press.png");
 
+var ImageSelceted = React.createClass({
+    handleClick:function(){
+        if(this.props.type == "next"){
+            if((this.props.len-1) == this.props.chartIndex){
+                var chartIndex = this.props.chartIndex;
+            }else{
+                var chartIndex = this.props.chartIndex+1;
+            }
+        }else{
+            if(this.props.chartIndex == 0){
+                var chartIndex = 0
+            }else{
+                var chartIndex = this.props.chartIndex-1;
+            }
+        }
+        if(this.props.onPress){
+            this.props.onPress(chartIndex);
+        }
+    },
+    render:function(){
+        var {source,len,chartIndex,type,onPress,...props} = this.props;
+        return(
+            <TouchableOpacity onPress={this.handleClick}>
+                <Image source={source} style={styles.Img}/>
+             </TouchableOpacity>
+        )
+    }
+});
+
 var SectionsList = React.createClass({
     _onhandleClick:function(){
         if(this.props.onPress){
@@ -35,9 +64,10 @@ var SectionsList = React.createClass({
     },
     render:function(){
         var {rowData,onPress,...props} = this.props;
+        var style = rowData.percent>=100?styles.greenStyle:rowData.percent>=60?styles.yellowStyle:rowData.percent>0?styles.redStyle:styles.noneStyle;
         return(
             <TouchableOpacity onPress={this._onhandleClick}>
-                <View style={styles.sectionView}><Text style={styles.sectionStyle}>{rowData.className}</Text></View>
+                <View style={[styles.sectionView,style]}><Text style={styles.sectionStyle}>{rowData.className}</Text></View>
             </TouchableOpacity>
         )
     }
@@ -52,14 +82,14 @@ var AnalysisPointView = React.createClass({
         return{
             chartDatas:SystemStore.getKnowledgeChartData("数学"),
             subjectInfo:SystemStore.getSubjectByName("math"),
+            chartIndex:0,
             form_data:{
                 grade:"七年级",
                 grade_sub:"上",
                 subject:"数学",
                 version:"苏教版",
                 grade_num:subjectInfo.grade_num
-            },
-            chartIndex:0
+            }
         }
     },
     componentDidMount:function(){
@@ -73,25 +103,23 @@ var AnalysisPointView = React.createClass({
     _onChange:function(){
         var form_data = this.state.form_data;
         this.setState({
-            chartDatas:StudentStore.getKnowledgeChartData(form_data.subject),
+            chartDatas:SystemStore.getKnowledgeChartData(form_data.subject),
         })
     },
-    _onPrevNodes:function(e){
-        var index = this.state.chartIndex;
+    _onNodes:function(chartIndex){
         this.setState({
-            chartIndex:index-1
-        });
-    },
-    _onNextNodes:function(e){
-        var index = this.state.chartIndex;
-        this.setState({
-            chartIndex:index+1
-        });
+            chartIndex:chartIndex
+        })
     },
     _getDatasSource:function(){
         var index = this.state.chartIndex;
+        var chartDatas = this.state.chartDatas;
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        return ds.cloneWithRows(this.state.chartDatas[index]);
+        if(chartDatas.length > 0){
+            return ds.cloneWithRows(chartDatas[index]);
+        }else{
+            return ds.cloneWithRows([]);
+        }
     },
     _onSelsectedScetion:function(){
     },
@@ -102,9 +130,13 @@ var AnalysisPointView = React.createClass({
     },
     render:function(){
         var index = this.state.chartIndex;
-        var length = this.state.chartDatas.length;
+        var chartIndex = this.state.chartIndex;
+        var chartDatas = this.state.chartDatas;
+        var title = chartDatas.length > 0?"第"+(index+1)+"章 "+chartDatas[index][0].chapter:"";
         var datas = this._getDatasSource();
-        var title = datas?"第"+(index+1)+"章 "+datas[0].chapter:"";
+        if(chartDatas.length > 0){
+            var len = chartDatas.length;
+        };
         var tips = {
             green:"已掌握",
             red:"未掌握",
@@ -120,22 +152,45 @@ var AnalysisPointView = React.createClass({
 					   </View>
                        <RowContainer style={styles.rowContainer}>
                             <View style={styles.contentTitle}>
-                                <Image source={btn_last_press} />
+                                <ImageSelceted len={len} type="last" source={btn_last_press} chartIndex={chartIndex} onPress={this._onNodes} />
                                 <View><Text style={styles.fontStyle}>{title}</Text></View>
-                                <Image source={btn_next_press} />
+                                <ImageSelceted len={len} type="next" source={btn_next_press} chartIndex={chartIndex} onPress={this._onNodes} />
                             </View>
-                            <ListView 
-                                enableEmptySections={true} 
-                                onEndReachedThreshold = {10}
-                                dataSource = {datas}
-                                renderRow = {this._onRenderRow}
-                            />
+                            <ScrollView style={styles.ScrollView}>
+                                <ListView 
+                                    enableEmptySections={true} 
+                                    onEndReachedThreshold = {10}
+                                    dataSource = {datas}
+                                    renderRow = {this._onRenderRow}
+                                />
+                            </ScrollView>
                        </RowContainer>
+                       <View style={styles.footer}>
+                            <View style={styles.footerstyle}>
+                                <View style={[styles.redStyle,styles.bankColor]}></View>
+                                <View><Text>未掌握</Text></View>
+                            </View>
+                            <View style={styles.footerstyle}>
+                                <View style={[styles.greenStyle,styles.bankColor]}></View>
+                                <View><Text>已掌握</Text></View>
+                            </View>
+                            <View style={styles.footerstyle}>
+                                <View style={[styles.yellowStyle,styles.bankColor]}></View>
+                                <View><Text>掌握不劳</Text></View>
+                            </View>
+                            <View style={styles.footerstyle}>
+                                <View style={[styles.noneStyle,styles.bankColor]}></View>
+                                <View><Text>未学习</Text></View>
+                            </View>
+                       </View>
                 </View>)
     }
 });
         
 var styles = StyleSheet.create({
+    ScrollView:{
+        height:Dimensions.screenHeight-Dimensions.toolBarHeight-Dimensions.tabBarHeight-Dimensions.size["86"]
+    },
     topCotent:{
         width:Dimensions.screenWidth,
         height:Dimensions.size["15"],
@@ -152,25 +207,63 @@ var styles = StyleSheet.create({
         fontSize:Dimensions.size["7"]
     },
     rowContainer:{
-        paddingTop:Dimensions.size["16"],
-        paddingRight:Dimensions.size["16"],
-        paddingBottom:Dimensions.size["16"],
-        paddingLeft:Dimensions.size["16"]
+        paddingTop:Dimensions.size["10"],
+        paddingRight:Dimensions.size["10"],
+        paddingBottom:Dimensions.size["10"],
+        paddingLeft:Dimensions.size["10"]
     },
     contentTitle:{
         flexDirection:"row",
         alignItems:"center",
-        justifyContent:"center"
+        justifyContent:"center",
+        marginBottom:Dimensions.size["7"]
     },
     sectionView:{
         height: Dimensions.size["15"],
+        flexDirection:"row",
+        alignItems:"center",
+        justifyContent:"center",
         paddingLeft:Dimensions.size["5"],
         paddingRight:Dimensions.size["5"],
-        marginBottom:Dimensions.size["9"]
+        marginBottom:Dimensions.size["9"],
+        borderRadius:2
     },
     sectionStyle:{
-        fontSize:Dimensions.size["7"],
-        color: "#fff"
+        fontSize:Dimensions.size["7"]
+    },
+    Img:{
+        width:Dimensions.size["10"],
+        height:Dimensions.size["10"],
+        marginRight: Dimensions.size["2"]
+    },
+    greenStyle:{
+        backgroundColor: "#91DE74"
+    },
+    yellowStyle:{
+       backgroundColor: "#FFC22D"
+    },
+    redStyle:{
+       backgroundColor: "#FF7E60"
+    },
+    noneStyle:{
+       backgroundColor: "#CCCCCC"
+    },
+    footer:{
+        height:Dimensions.size["30"],
+        paddingLeft:Dimensions.size["10"],
+        paddingRight:Dimensions.size["10"],
+        flexDirection:"row",
+        alignItems:"center",
+        justifyContent:"space-around"
+    },
+    footerstyle:{
+        flexDirection:"row",
+        alignItems:"center",
+        justifyContent:"flex-start"
+    },
+    bankColor:{
+        width:Dimensions.size["7"],
+        height:Dimensions.size["7"]
     }
 })
 
