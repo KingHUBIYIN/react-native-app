@@ -213,5 +213,38 @@ module.exports = {
 				systemActions.receivedTopicSuggest(res.data);
 			}
 		})
+    },
+    //获取科目章节
+    getSubjectAttrs:function(form_data){
+        Ajax({
+            url:"/api/subject_attr",
+            type:"get",
+            data:form_data,
+            success:function(res){
+                systemActions.receivedSubjectAttrs(res.data);
+            }
+        })
+    },
+    //获取不同科目的试卷曲线统计
+    getAllExamInfo:function(formData){
+        Ajax({
+            url:"/api/v1/students/get_all_exam_info",
+            type:"get",
+            data:formData,
+            success:function(res){
+                systemActions.receivedAllExamInfo(res.data);
+            }
+        })
+    },
+    //过去知识图谱
+    getKnowMap:function(formData){
+        Ajax({
+            url:"/api/v1/students/knowledge_map",
+            type:"get",
+            data:formData,
+            success:function(res){
+                systemActions.receivedKnowMap(res.data);
+            }
+        })
     }
 }

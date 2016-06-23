@@ -105,5 +105,29 @@ module.exports = {
             type:ActionTypes.RECEIVED_TOPIC_SUGGEST,
             data:data
         })
+    },
+    receivedSubjectAttrs:function(data){
+        SystemDispatcher.dispatch({
+            type:ActionTypes.RECEIVED_SUBATTRS,
+            data:data
+        })
+    },
+    receivedAllExamInfo:function(data){
+        SystemDispatcher.dispatch({
+            type:ActionTypes.RECEIVED_ALL_EXAM_INFO,
+            data:data
+        })
+    },
+    receivedKnowMap:function(data){
+        SystemDispatcher.dispatch({
+            type:ActionTypes.RECEIVED_KONW_MAP,
+            data:data
+        })
+    },
+    receivedStudentInfo:function(data){
+        SystemDispatcher.dispatch({
+            type:ActionTypes.RECEIVED_STUDENT_INFO,
+            data:data
+        })
     }
 }

@@ -24,27 +24,11 @@ var WebAPIUtils = require('../../utils/web-api-utils');
 var NavBars = require('../base/navbars');
 
 //图片资源
-var btn_next_press = require("../../images/btn_next_press.png");
-var btn_last_press = require("../../images/btn_last_press.png");
-
-var SectionsList = React.createClass({
-    _onhandleClick:function(){
-        if(this.props.onPress){
-            this.props.onPress();
-        }
-    },
-    render:function(){
-        var {rowData,onPress,...props} = this.props;
-        return(
-            <TouchableOpacity onPress={this._onhandleClick}>
-                <View style={styles.sectionView}><Text style={styles.sectionStyle}>{rowData.className}</Text></View>
-            </TouchableOpacity>
-        )
-    }
-});
+var ico-back-normal = require("../../images/ico-back-normal.png");
+var ico-next-normal = require("../../images/ico-next-normal.png");
 
 var AnalysisPointView = React.createClass({
-     getInitialState:function(){
+    getInitialState:function(){
         var studentInfo = SystemStore.getStudentInfo();
         WebAPIUtils.getSubjectAttrs({grade:"七年级",grade_sub:"上",subject:"数学",version:"苏教版",grade_num:studentInfo.grade_num});
         var subjectInfo = SystemStore.getSubjectByName("math");
@@ -52,6 +36,8 @@ var AnalysisPointView = React.createClass({
         return{
             chartDatas:SystemStore.getKnowledgeChartData("数学"),
             subjectInfo:SystemStore.getSubjectByName("math"),
+            pieIndex:0,
+            subject:false,
             form_data:{
                 grade:"七年级",
                 grade_sub:"上",
@@ -59,7 +45,13 @@ var AnalysisPointView = React.createClass({
                 version:"苏教版",
                 grade_num:subjectInfo.grade_num
             },
-            chartIndex:0
+            subject_position:{left:0,top:0},
+            chartIndex:0,
+            hoverNode:{},
+            hoverPos:{
+                x:0,
+                y:0
+            }
         }
     },
     componentDidMount:function(){
@@ -70,11 +62,44 @@ var AnalysisPointView = React.createClass({
 		SystemStore.removeChangeListener(EventTypes.RECEIVED_KONW_MAP,this._onChange);
 		SystemStore.removeChangeListener(EventTypes.RECEIVED_SUBATTRS,this._onChange);
     },
+    _selectPieChartTab:function(e){
+        e =  e ||event;
+        var target  = e.target || e.srcElement;
+        var index =parseInt($(target).attr("data-index"));
+        this.setState({ pieIndex:index });
+    },
     _onChange:function(){
         var form_data = this.state.form_data;
         this.setState({
             chartDatas:StudentStore.getKnowledgeChartData(form_data.subject),
         })
+    },
+    _toggleSubjectDialog:function(toggle){
+        var $subject = $(ReactDOM.findDOMNode(this.refs.ddSubject));
+        var position = $subject.position();
+        this.setState({subject:toggle,subject_position:{left:position.left+69,top:position.top+29}});
+    },
+    _onSubjectClick:function(e){
+        var studentInfo = StudentStore.getStudentInfo();
+        e = e || window.event;
+        var target = e.target || e.srcElement;
+        subject = $(target).attr("data-subject");
+        chinese = $(target).attr("data-chinese");
+        var subjectInfo = StudentStore.getSubjectByName(subject);
+        
+        var form_data = this.state.form_data;
+        form_data["subject"] = chinese;
+        form_data["grade_num"] = studentInfo.grade_num;
+        
+	    StudentWebAPIUtils.getSubjectAttrs(form_data);
+        StudentWebAPIUtils.getKnowMap({subject_id:subjectInfo.subject_id});
+        this.setState({
+            subject:false,
+            subjectInfo:StudentStore.getSubjectByName(subject),
+            form_data:form_data,
+            pieIndex:0,
+            chartIndex:0
+        });
     },
     _onPrevNodes:function(e){
         var index = this.state.chartIndex;
@@ -84,29 +109,52 @@ var AnalysisPointView = React.createClass({
         var index = this.state.chartIndex;
         this.setState({chartIndex:index+1});
     },
-    _getDatasSource:function(){
-        var index = this.state.chartIndex;
-        var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        return ds.cloneWithRows(this.this.state.chartDatas[index]);
+    _handleMouseLeave:function(e){
+        this.setState({ hoverNode:{} });
     },
-    _onSelsectedScetion:function(){
-    },
-    _onRenderRow:function(rowData,sectionID,rowID){
-        return(
-            <SectionsList rowData={rowData} onPress={this._onSelsectedScetion} />
-        )
+    _handleMouseEnter:function(e){
+        e = e || event;
+        var target = e.target || e.srcElement;
+        var index = parseInt($(target).attr("data-index"));
+        var dx = parseFloat($(target).attr("data-x"));
+        var dy = parseFloat($(target).attr("data-y"));
+        
+        var chartIndex = this.state.chartIndex;
+        var datas = this.state.chartDatas[chartIndex];
+        this.setState({ 
+            hoverNode:datas[index],
+            hoverPos:{ x:dx, y:dy }
+        });
     },
     render:function(){
         var index = this.state.chartIndex;
         var length = this.state.chartDatas.length;
-        var datas = this._getDatasSource();
+        var datas = this.state.chartDatas[index];
         var title = datas?"第"+(index+1)+"章 "+datas[0].chapter:"";
+        var bubble = d3.layout.pack().sort(null).size([960,700]).padding(10);
+        var nodes = bubble.nodes({children:datas}).filter(function(d){
+            return !d.children;
+        });
         var tips = {
             green:"已掌握",
             red:"未掌握",
             yellow:"掌握不牢",
             none:"未做检测",
+        }
+        var hoverNode = this.state.hoverNode;
+        var hoverPos = this.state.hoverPos;
+        var handleMouseLeave = this._handleMouseLeave;
+        var handleMouseEnter = this._handleMouseEnter;
+        var infoPos = {
+            x:hoverPos.x>700?hoverPos.x-200:hoverPos.x,
+            y:hoverPos.y>440?hoverPos.y-260:hoverPos.y
         };
+        
+        var subjectInfo = this.state.subjectInfo;
+        var onSubjectClick = this._onSubjectClick;
+        var showSubject = this.state.subject;
+        var subjectPos = this.state.subject_position;
+        var hash = History.curHash.hash;
         return (<View>
                        <NavBars name="/analysis/index/point" />
 					   <View style={styles.topCotent}>
@@ -116,16 +164,10 @@ var AnalysisPointView = React.createClass({
 					   </View>
                        <RowContainer style={styles.rowContainer}>
                             <View style={styles.contentTitle}>
-                                <Image source={btn_last_press} />
+                                <Image source={ico-back-normal} />
                                 <View><Text style={styles.fontStyle}>{title}</Text></View>
-                                <Image source={btn_next_press} />
+                                <Image source={ico-next-normal} />
                             </View>
-                            <ListView 
-                                enableEmptySections={true} 
-                                onEndReachedThreshold = {10}
-                                dataSource = {datas}
-                                renderRow = {this._onRenderRow}
-                            />
                        </RowContainer>
                 </View>)
     }
@@ -133,7 +175,7 @@ var AnalysisPointView = React.createClass({
         
 var styles = StyleSheet.create({
     topCotent:{
-        width:Dimensions.screenWidth,
+        wdith:Dimensions.screenWidth,
         height:Dimensions.size["15"],
         paddingLeft:Dimensions.size["5"],
         backgroundColor:"#ddd",
@@ -157,16 +199,6 @@ var styles = StyleSheet.create({
         flexDirection:"row",
         alignItems:"center",
         justifyContent:"center"
-    },
-    sectionView:{
-        height: Dimensions.size["15"],
-        paddingLeft:Dimensions.size["5"],
-        paddingRight:Dimensions.size["5"],
-        marginBottom:Dimensions.size["9"]
-    },
-    sectionStyle:{
-        fontSize:Dimensions.size["7"],
-        color: "#fff"
     }
 })
 

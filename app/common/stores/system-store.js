@@ -38,6 +38,11 @@ var _wrong_answers = [];
 //攻克训练的题目
 var _topic_suggest = [];
 
+//学习曲线
+var _subject_attrs = [];
+var _chart_data = {};
+var _knowledge_map = [];
+
 var SystemStore = assign({},EventEmitter.prototype,{
     emitChange:function(type){
         this.emit(type);
@@ -455,6 +460,220 @@ return ele.no;
         }
         return _topic_suggest;
     },//攻克训练的题目
+    getChartData:function(){
+      var answer_sheets = _.map(_chart_data.exam_infos,function(ele){
+          var exam = ele.exam_info;
+          var exams = [];
+          for(var i in exam){
+              exams.push(exam[i]);
+          }
+          
+          var correct_len = exams.filter(function(ele){
+              return !!ele.correct;
+          }).length;
+          
+          return {
+              date:ele.date,
+              correct: correct_len,
+              error:exams.length - correct_len,
+              sum:exams.length
+          }
+      });
+      
+      var pieData = [
+          {
+              correct:answer_sheets[0]?answer_sheets[0].correct:0,
+              error:answer_sheets[0]?answer_sheets[0].error:0,
+              sum:answer_sheets[0]?answer_sheets[0].sum:0,
+          },
+          {
+              correct:0,
+              error:0,
+              sum:0
+          },
+          {
+              correct:0,
+              error:0,
+              sum:0
+          },
+          {
+              correct:0,
+              error:0,
+              sum:0
+          }
+      ]
+      
+      answer_sheets = _.sortBy(answer_sheets,function(ele){
+          return - ele.date;
+      })
+      
+      weeks = answer_sheets.filter(function(ele){
+          var today = new Date();
+          var mon = new Date().addDate(-today.getDay());
+          var sun = new Date().addDate(7-today.getDay());
+          var _date = ele.date*1000;
+          return _date>mon.valueOf() && _date<sun.valueOf();
+      });
+      
+      months = answer_sheets.filter(function(ele){
+          var today = new Date();
+          var firstDay = new Date().addDate(-today.getDate());
+          var lastDay = new Date().addDate(today.MonthlyNum()-today.getDate());
+          var _date = ele.date*1000;
+          return _date> firstDay.valueOf() && _date< lastDay.valueOf();
+      });
+      
+      _.map(answer_sheets,function(ele,pos){
+          pieData[3].correct += ele.correct;
+          pieData[3].error += ele.error;
+          pieData[3].sum += ele.correct + ele.error;
+      })
+      _.map(weeks,function(ele,pos){
+          pieData[1].correct += ele.correct;
+          pieData[1].error += ele.error;
+          pieData[1].sum += ele.correct + ele.error;
+      })
+      _.map(months,function(ele,pos){
+          pieData[2].correct += ele.correct;
+          pieData[2].error += ele.error;
+          pieData[2].sum += ele.correct + ele.error;
+      })
+    var answer_len = answer_sheets.length;
+    var values =    _.map(answer_sheets,function(ele,pos){
+                return {
+                    x:(pos%Math.round(answer_len/10))?"":pos, 
+                    y:ele.sum?ele.correct*100/ele.sum:0
+                }
+      })
+      
+      return {
+          pie:[
+                    {
+                        seriesName:"本次",
+                        values:[
+                                  { name: 'correct',label:"正确", value: pieData[0].correct ,color:"#91DE74" },
+                                  { name: 'wrong',label:"错误", value: pieData[0].error,color:"#FF7E60" },
+                                  { name: 'undo',label:"未做", value: 0,color:"#CCCCCC" }
+                        ],
+                        sum:pieData[0].sum
+                    },
+                    {
+                        seriesName:"本周",
+                        values:[
+                                  { name: 'correct',label:"正确", value: pieData[1].correct,color:"#91DE74" },
+                                  { name: 'wrong',label:"错误", value: pieData[1].error,color:"#FF7E60" },
+                                  { name: 'undo',label:"未做", value: 0,color:"#CCCCCC" }
+                        ],
+                        sum:pieData[1].sum
+                    },
+                    {
+                        seriesName:"本月",
+                        values:[
+                                  { name: 'correct',label:"正确", value: pieData[2].correct,color:"#91DE74" },
+                                  { name: 'wrong',label:"错误", value: pieData[2].error,color:"#FF7E60" },
+                                  { name: 'undo',label:"未做", value: 0,color:"#CCCCCC" }
+                        ],
+                        sum:pieData[2].sum
+                    },
+                    {
+                        seriesName:"累计",
+                        values:[
+                                  { name: 'correct',label:"正确", value: pieData[3].correct,color:"#91DE74" },
+                                  { name: 'wrong',label:"错误", value: pieData[3].error,color:"#FF7E60" },
+                                  { name: 'undo',label:"未做", value: 0,color:"#CCCCCC" }
+                        ],
+                        sum:pieData[3].sum
+                    }
+            ],
+          line: [
+                {
+                    seriesName:"作业数据",
+                    values: values,
+                    color:"#FF7E60"
+                 },
+                {
+                    seriesName:"考试数据",
+                    values:values,
+                    color:"#91DE74"
+                }
+          ]
+      }
+  },//获取学习曲线
+    getKnowledgeChartData:function(subject){
+      _subject_attrs = _.map(_subject_attrs,function(ele,pos){
+              if(subject == "数学"){
+                  var points_topics = _knowledge_map.filter(function(k,pos){
+                  return k.nodes[2] == ele.points;
+                  })
+                  var points_correct_topics = points_topics.filter(function(k,pos){
+                      return k.correct;
+                  })
+                  var percent = points_correct_topics.length*100 / points_topics.length;
+                  var packName = percent>=100?"green":percent>=60?"yellow":percent>0?"red":"none";
+                  var colors = {
+                      "green":"#91DE74",
+                      "yellow":"#FFC22D",
+                      "red":"#FF7E60",
+                      "none":"#CCCCCC"
+                  };
+                  return {
+                      chapter: ele.chapter,
+                      chapter_num: ele.chapter_num,
+                      section: ele.section,
+                      section_num: ele.section_num,
+                      points : ele.points,
+                      className: ele.points,
+                      packageName:packName,
+                      value:50+ Math.ceil(ele.points.length/4)*25,
+                      rows:Math.ceil(ele.points.length/4),
+                      color:colors[packName],
+                      percent:percent,
+                      total:points_topics.length,
+                      A4:0,
+                      A3:0
+                  }
+              };
+              if(subject == "语文"){
+                  var section_topics = _knowledge_map.filter(function(k,pos){
+                  return k.nodes[1] == ele.section;
+                  })
+                  var section_correct_topics = section_topics.filter(function(k,pos){
+                      return k.correct;
+                  })
+                  var percent = section_correct_topics.length*100 / section_topics.length;
+                  var packName = percent>=100?"green":percent>=60?"yellow":percent>0?"red":"none";
+                  var colors = {
+                      "green":"#91DE74",
+                      "yellow":"#FFC22D",
+                      "red":"#FF7E60",
+                      "none":"#CCCCCC"
+                  };
+                  return {
+                      chapter: ele.chapter,
+                      chapter_num: ele.chapter_num,
+                      section: ele.section,
+                      section_num: ele.section_num,
+                      points : ele.points,
+                      className: ele.section,
+                      packageName:packName,
+                      value:50+ Math.ceil(ele.section.length/4)*25,
+                      rows:Math.ceil(ele.section.length/4),
+                      color:colors[packName],
+                      percent:percent,
+                      total:section_topics.length,
+                      A4:0,
+                      A3:0
+                  }
+                  };
+          });
+      
+      return _.toArray(_.groupBy(_subject_attrs,function(ele){
+          return ele.chapter_num;
+      }));
+  },//获取知识图谱数据
+    getSubjectAttrs:function(){
+        return _subject_attrs;
+    },
 	getErrorMsg:function(){
 		return _error_msg;
 	},
@@ -665,6 +884,20 @@ SystemStore.dispatchToken = SystemDispatcher.register(function(action){
             _topic_suggest = action.data;
             SystemStore.emitChange(EventTypes.RECEIVED_TOPIC_SUGGEST);
           break;
+     case ActionTypes.RECEIVED_SUBATTRS:
+          _subject_attrs = _.sortBy(action.data,function(ele,pos){
+                  return parseFloat(ele.section_num);
+              });
+          SystemStore.emitChange(EventTypes.RECEIVED_SUBATTRS);
+          break;
+     case ActionTypes.RECEIVED_ALL_EXAM_INFO:
+          _chart_data = action.data;
+          SystemStore.emitChange(EventTypes.RECEIVED_ALL_EXAM_INFO);
+          break;
+    case ActionTypes.RECEIVED_KONW_MAP:
+          _knowledge_map = action.data;
+          StudentStore.emitChange(EventTypes.RECEIVED_KONW_MAP);
+          break;        
     }
 })
 

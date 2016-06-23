@@ -80,20 +80,42 @@ var TopicType = React.createClass({
         }
     },
     render:function(){
-        var {type,style,answerSheetId,content,onPress,...props} = this.props;
+        var {type,selected,answerSheetId,content,onPress,...props} = this.props;
+        var style = this.props.selected == this.props.type?styles.topicTypeColor:"";
+        var styleText = this.props.selected == this.props.type?styles.textColor:"";
         return(
-            <TouchableHighlight onPress = {this.handleOnPress}>
-                <View style = {[styles.topicType,style]}><Text style = {styles.textSize}>{content}</Text></View>
-            </TouchableHighlight>
+            <TouchableOpacity onPress = {this.handleOnPress}>
+                <View style = {[styles.topicType,style]}><Text style = {[styles.textSize,styleText]}>{content}</Text></View>
+            </TouchableOpacity>
         )
     }
+});
+             
+var GroupOption = React.createClass({
+     _onSelectedTopics:function(answerSheetId,type){
+        if(this.props.onPress){
+            this.props.onPress(answerSheetId,type);
+        }
+    },
+     render:function(){
+         var {selected,answer_sheet_id,onPress,...props} = this.props;
+         return(
+             <View style = {styles.topicTitle}>
+                    <TopicType selected = {selected} answerSheetId = {this.props.answer_sheet_id} type = "" content = "全部" onPress = {this._onSelectedTopics} />
+                    <TopicType selected = {selected} answerSheetId = {this.props.answer_sheet_id} type = "1" content = "选择题" onPress = {this._onSelectedTopics} />
+                    <TopicType selected = {selected} answerSheetId = {this.props.answer_sheet_id} type = "2" content = "填空题" onPress = {this._onSelectedTopics} />
+                    <TopicType selected = {selected} answerSheetId = {this.props.answer_sheet_id} type = "3" content = "解答题" onPress = {this._onSelectedTopics} />
+             </View>
+         )
+     }
 });
 
 var WrongMain = React.createClass({
     getInitialState:function(){
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         return {
-            wrong_topic: ds.cloneWithRows(SystemStore.getWrongTopicByType(this.props.answer_sheet_id))
+            wrong_topic: ds.cloneWithRows(SystemStore.getWrongTopicByType(this.props.answer_sheet_id)),
+            selected: ""
         }
     },
     _onRenderRow:function(rowData,sectionID,rowID){
@@ -107,20 +129,17 @@ var WrongMain = React.createClass({
     _onSelectedTopics:function(answer_sheet_id,type){
          var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
          this.setState({
-            wrong_topic: ds.cloneWithRows(SystemStore.getWrongTopicByType(answer_sheet_id,type))
+            wrong_topic: ds.cloneWithRows(SystemStore.getWrongTopicByType(answer_sheet_id,type)),
+            selected: type
          })
     },
     render:function(){
         var wrong_topic = this.state.wrong_topic;
+        var selected = this.state.selected;
         return (
             <ScrollView style = {styles.listview}>
                 <View style = {styles.allTitle}>
-                    <View style = {styles.topicTitle}>
-                        <TopicType style = {styles.topicTypeColor} answerSheetId = {this.props.answer_sheet_id} type = "" content = "全部" onPress = {this._onSelectedTopics} />
-                        <TopicType answerSheetId = {this.props.answer_sheet_id} type = "1" content = "选择题" onPress = {this._onSelectedTopics} />
-                        <TopicType answerSheetId = {this.props.answer_sheet_id} type = "2" content = "填空题" onPress = {this._onSelectedTopics} />
-                        <TopicType answerSheetId = {this.props.answer_sheet_id} type = "3" content = "解答题" onPress = {this._onSelectedTopics} />
-                    </View>
+                    <GroupOption selected={selected} answer_sheet_id={this.props.answer_sheet_id} onPress = {this._onSelectedTopics} />
                 </View>
                 <ListView 
                     enableEmptySections={true} 
@@ -153,7 +172,8 @@ var styles = StyleSheet.create({
         height: Dimensions.size["11"],
         borderStyle:"solid",
         borderWidth: 1,
-        borderColor: "#B7B7B7"
+        borderColor: "#B7B7B7",
+        borderRadius: 2,
     },
     topicTypeColor:{
         backgroundColor: "#74C93C",
@@ -163,6 +183,9 @@ var styles = StyleSheet.create({
     textSize:{
         fontSize: Dimensions.size["7"],
         textAlign: "center"
+    },
+    textColor:{
+        color: "#fff"
     },
     listview:{
         height: Dimensions.screenHeight - Dimensions.toolBarHeight - Dimensions.size["25"]

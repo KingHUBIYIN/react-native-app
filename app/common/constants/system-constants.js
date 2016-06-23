@@ -19,7 +19,10 @@ module.exports = {
         RECEIVED_STUDENT_META:null,
         RECEIVED_EXAM_ERROR_TOPIC_NUM:null,
         RECEIVED_EXAM_ERROR_TOPIC:null,
-        RECEIVED_TOPIC_SUGGEST:null
+        RECEIVED_TOPIC_SUGGEST:null,
+        RECEIVED_SUBATTRS:null,
+        RECEIVED_ALL_EXAM_INFO:null,
+        RECEIVED_KONW_MAP:null
     }),
     EventTypes:keyMirror({
 		RECEIVED_ERROR_MSG:null,
@@ -38,6 +41,9 @@ module.exports = {
         RECEIVED_STUDENT_META:null,
         RECEIVED_EXAM_ERROR_TOPIC_NUM:null,
         RECEIVED_EXAM_ERROR_TOPIC:null,
-        RECEIVED_TOPIC_SUGGEST:null
+        RECEIVED_TOPIC_SUGGEST:null,
+        RECEIVED_SUBATTRS:null,
+        RECEIVED_ALL_EXAM_INFO:null,
+        RECEIVED_KONW_MAP:null
     })
 }
