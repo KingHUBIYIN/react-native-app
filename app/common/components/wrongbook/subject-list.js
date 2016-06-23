@@ -1,3 +1,5 @@
+
+
 'use strict'
 var React = require('react');
 var {
@@ -17,6 +19,7 @@ var {Link,History} = require('../base/react-native-router');
 var TabBars = require('../base/tabbars');
 var {ContentContainer,RowContainer} = require('../base/system-container')
 var ToolBar = require('../base/react-native-toolbar');
+var WebAPIUtils = require('../../utils/web-api-utils');
 
 var SystemStore = require('../../stores/system-store');
 var {EventTypes} = require('../../constants/system-constants');
@@ -31,7 +34,7 @@ var ico_subject = require("../../images/btn_next_normal.png");
 var SubjectSeclet = React.createClass({
     handlePress:function(){
         if(this.props.onPress){
-            this.props.onPress("/wrong/index/" +this.props.rowData.subject);
+            this.props.onPress("/wrong/index/" +this.props.rowData.subject + "/ChoiceAll");
         }
     },
     render:function(){
@@ -44,7 +47,7 @@ var SubjectSeclet = React.createClass({
                                 <View style = {[styles.bordStyle,styles.subjectRow]}>
                                         <View style = {styles.subjectStyle}><Text style = {styles.TextStyle}>{rowData.name}</Text></View>
                                         <View style = {styles.blankStyle}></View>
-                                        <View style = {styles.fontSizeStyle}><Text style = {styles.TextStyle}>{rowData.topic_error}</Text></View>
+                                        <View style = {styles.fontSizeStyle}><Text style = {styles.TextStyle}>{rowData.total_error_num}</Text></View>
                                         <View style = {styles.fontSizeStyle}><Image source = {ico_subject} /></View>
                                 </View>
                         </View>
@@ -59,7 +62,7 @@ var SubjectSeclet = React.createClass({
                                 <View style = {[styles.bordStyle,styles.subjectRow,styles.borderNo]}>
                                         <View style = {styles.subjectStyle}><Text style = {styles.TextStyle}>{rowData.name}</Text></View>
                                         <View style = {styles.blankStyle}></View>
-                                        <View style = {styles.fontSizeStyle}><Text style = {styles.TextStyle}>{rowData.topic_error}</Text></View>
+                                        <View style = {styles.fontSizeStyle}><Text style = {styles.TextStyle}>{rowData.total_error_num}</Text></View>
                                         <View style = {styles.fontSizeStyle}><Image source = {ico_subject} /></View>
                                 </View>
                         </View>
@@ -74,7 +77,7 @@ var SubjectSeclet = React.createClass({
                                 <View style = {[styles.bordStyle,styles.subjectRow]}>
                                         <View style = {styles.subjectStyle}><Text style = {styles.TextStyle}>{rowData.name}</Text></View>
                                         <View style = {styles.blankStyle}></View>
-                                        <View style = {styles.fontSizeStyle}><Text style = {styles.TextStyle}>{rowData.topic_error}</Text></View>
+                                        <View style = {styles.fontSizeStyle}><Text style = {styles.TextStyle}>{rowData.total_error_num}</Text></View>
                                         <View style = {styles.fontSizeStyle}><Image source = {ico_subject} /></View>
                                 </View>
                         </View>
@@ -89,19 +92,20 @@ var HomeListView = React.createClass({
     getInitialState:function(){
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         return{
-            _subject_wrong_topics: ds.cloneWithRows(SystemStore.getSubjectWrongTopics())
+            _topic_error_num:ds.cloneWithRows(SystemStore.getExamErrorTopicNum())
         }
     },
     componentDidMount:function(){
-        SystemStore.addChangeListener(EventTypes.RECEIVED_ALL_DATA,this._onChange);
+        WebAPIUtils.getExamErrorTopicNum();
+        SystemStore.addChangeListener(EventTypes.RECEIVED_EXAM_ERROR_TOPIC_NUM,this._onChange);
     },
     componentWillUnmount:function(){
-        SystemStore.removeChangeListener(EventTypes.RECEIVED_ALL_DATA,this._onChange);
+        SystemStore.removeChangeListener(EventTypes.RECEIVED_EXAM_ERROR_TOPIC_NUM,this._onChange);
     },
     _onChange:function(){
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.setState({
-             _subject_wrong_topics: ds.cloneWithRows(SystemStore.getSubjectWrongTopics())
+             _topic_error_num: ds.cloneWithRows(SystemStore.getExamErrorTopicNum())
         })
     },
     _onPushHash:function(hash){
@@ -113,13 +117,13 @@ var HomeListView = React.createClass({
         )
     },
     render:function(){
-        var _subject_wrong_topics = this.state._subject_wrong_topics;
+        var _topic_error_num = this.state._topic_error_num;
         return (<ContentContainer>
                         <ToolBar  title="错题本" ></ToolBar>
                         <RowContainer>
                                 <ListView 
                                     enableEmptySections={true} 
-                                    dataSource={_subject_wrong_topics} 
+                                    dataSource={_topic_error_num} 
                                     renderRow={this._onRenderRow}
                                 />
                         </RowContainer>

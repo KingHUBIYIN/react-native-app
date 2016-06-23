@@ -15,6 +15,7 @@ var app = React.createClass({
   componentDidMount:function(){
         // test
         WebAPIUtils.initData();
+        WebAPIUtils.getStudentMeta();
   },
   render: function() {
     return (

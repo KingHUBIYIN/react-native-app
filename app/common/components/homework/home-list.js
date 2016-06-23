@@ -16,6 +16,7 @@ var TabBars = require('../base/tabbars');
 var {ContentContainer} = require('../base/system-container')
 var ToolBar = require('../base/react-native-toolbar');
 var {TouchableOpacity} = require('../base/react-native-form');
+var WebAPIUtils = require('../../utils/web-api-utils')
 
 var SystemStore = require('../../stores/system-store');
 var {EventTypes} = require('../../constants/system-constants');
@@ -50,10 +51,13 @@ var HomeListView = React.createClass({
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2,sectionHeaderHasChanged:(s1,s2)=>s1!==s2});
         return {
             answer_sheets: ds.cloneWithRowsAndSections(SystemStore.getAnswerSheets(this.props.subject)),
-            student_info: SystemStore.getSubjectByName(this.props.subject)
+            student_info: SystemStore.getSubjectByName(this.props.subject),
+            _answer_sheets:SystemStore.getAnswerSheets(this.props.subject)
         }
     },
     componentDidMount:function(){
+        var _student_info = SystemStore.getSubjectByName(this.props.subject);
+        WebAPIUtils.getAllData({"subject_id": _student_info.subject_id,"cursor":0,"page_num":10});
         SystemStore.addChangeListener(EventTypes.RECEIVED_ALL_DATA,this._onChange);
         SystemStore.addChangeListener(EventTypes.RECEIVED_STUDENT_META,this._onChange);
     },
@@ -65,8 +69,14 @@ var HomeListView = React.createClass({
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2,sectionHeaderHasChanged:(s1,s2)=>s1!==s2});
         this.setState({
              answer_sheets: ds.cloneWithRowsAndSections(SystemStore.getAnswerSheets(this.props.subject)),
-             student_info: SystemStore.getSubjectByName(this.props.subject)
+             student_info: SystemStore.getSubjectByName(this.props.subject),
+            _answer_sheets:SystemStore.getAnswerSheets(this.props.subject)
         })
+    },
+    _onGetAllData:function(){
+        var next_cursor = SystemStore.getNextCursor();
+        var _student_info = this.state.student_info;
+        WebAPIUtils.getAllData({"subject_id": _student_info.subject_id,"cursor":next_cursor,"page_num":10});
     },
     onNavIconPress:function(){
 		History.popRoute();
@@ -87,26 +97,32 @@ var HomeListView = React.createClass({
     render:function(){
         var answer_sheets = this.state.answer_sheets;
         var student_info = this.state.student_info;
-        var flagKey = SystemStore.getAnswerSheets(this.props.subject);
-        if(!flagKey){
-              return(
-                <ContentContainer>
-                            <ToolBar navIcon={{title:"<返回"}}  title={student_info.cn} onNavIconPress={this.onNavIconPress}></ToolBar>
-                            <View><Text>{"Loading......"}</Text></View>
-                    </ContentContainer>
-              )
-        }else{
-             return (
+        var flagArr = [];
+        var _answer_sheets = this.state._answer_sheets;
+        for(var key in _answer_sheets){
+            flagArr.push(_answer_sheets[key]);
+        }
+        if(flagArr.length > 0){
+            return (
                       <ContentContainer>
                             <ToolBar navIcon={{title:"<返回"}}  title={student_info.cn} onNavIconPress={this.onNavIconPress}></ToolBar>
                             <ListView 
                                 enableEmptySections={true} 
+                                onEndReachedThreshold = {10}
                                 dataSource={answer_sheets} 
                                 renderRow={this._renderRow}
                                 renderSectionHeader={this._renderSectionHeader}
                                 renderSeparator={(sectionID, rowID) => <View key={`${sectionID}-${rowID}`}/>} 
+                                onEndReached = {this._onGetAllData}
                             ></ListView>	
                     </ContentContainer>)
+        }else{
+             return(
+                <ContentContainer>
+                            <ToolBar navIcon={{title:"<返回"}}  title={student_info.cn} onNavIconPress={this.onNavIconPress}></ToolBar>
+                            <View style = {styles.loading}><Text style = {styles.loadingTextSize}>数据正在加载中，客官请稍等</Text></View>
+                    </ContentContainer>
+              )
         }
     }
 })
@@ -114,12 +130,12 @@ var HomeListView = React.createClass({
 var styles = StyleSheet.create({
     loading:{
         width: Dimensions.screenWidth,
-        height: Dimensions.screenHeight - Dimensions.toolBarHeight,
-        justifyContent: "center"
+        height: Dimensions.screenHeight-Dimensions.toolBarHeight-Dimensions.tabBarHeight,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center"
     },
-    loadingText:{
-        width: Dimensions.size["50"],
-        height: Dimensions.size["10"],
+    loadingTextSize:{
         fontSize:Dimensions.size["7"]
     },
     rowView:{

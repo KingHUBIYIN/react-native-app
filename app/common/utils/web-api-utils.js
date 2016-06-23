@@ -9,7 +9,19 @@ const STUDENT_URL = 'http://testedu.idealsee.com';
 var Ajax = function(options){
 	// change data
 	var formData = null;
-	switch(typeof options.data){
+    if(options.type.toUpperCase()=="GET"){
+        if(typeof options.data=="object"){
+            options.url +="?";
+            var i = 0;
+            for(var key in options.data){
+                if(i!=0) options.url +="&";
+                 var value = options.data[key];
+                 options.url += key+"="+value;
+                 i++;
+            }
+        }
+    }else{
+	   switch(typeof options.data){
 		case "string":
 			formData = options.data;
 			break;
@@ -28,7 +40,8 @@ var Ajax = function(options){
 				}
 			}
 			break;
-	}
+	   }
+    }
 
     fetch(STUDENT_URL+options.url,{
         method:options.type,
@@ -134,7 +147,7 @@ module.exports = {
 			helper.handleUserDataChange(data.user_info);
         });
     },
-     //获取试卷列表
+     //分段获取试卷列表
     getAllData:function(formData){
         Ajax({
 			url:"/custom/student/get_paper_list",
@@ -149,9 +162,9 @@ module.exports = {
 		})
     },
     //获取meta信息
-     getStudentMeta:function(formData){
+    getStudentMeta:function(formData){
         Ajax({
-			url:"/custom/student/meta",
+			url:"/api/v1/students/meta",
 			type:"get",
 			data:formData,
 			success:function(res){
@@ -159,6 +172,45 @@ module.exports = {
 			},
 			error:function(status,msg){
 				helper.handleErrorMsgChange({status,msg});
+			}
+		})
+    },
+    //获取不同科目的错题总数
+    getExamErrorTopicNum:function(formData){
+        Ajax({
+			url:"/api/v1/students/get_exam_error_topic_num",
+			type:"get",
+			data:formData,
+			success:function(res){
+				systemActions.receivedExamErrorTopicNum(res.data);
+			},
+			error:function(status,msg){
+				helper.handleErrorMsgChange({status,msg});
+			}
+		})
+    },
+    //分段获取错题的试卷列表
+    getExamErrorTopic:function(formData){
+         Ajax({
+			url:"/api/v1/students/get_exam_error_topic",
+			type:"get",
+			data:formData,
+			success:function(res){
+				systemActions.receivedExamErrorTopic(res.data);
+			},
+			error:function(status,msg){
+				helper.handleErrorMsgChange({status,msg});
+			}
+		})
+    },
+    //攻克训练的题目
+    getTopicSuggest:function(formData){
+        Ajax({
+			url:"/api/topic/suggest",
+			type:"get",
+			data:formData,
+			success:function(res){
+				systemActions.receivedTopicSuggest(res.data);
 			}
 		})
     }

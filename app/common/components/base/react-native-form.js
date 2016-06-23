@@ -95,9 +95,6 @@ var ToggleButton = React.createClass({
 		return (<Button title={(toggle?toggleTitle:title)} onPress={this.onPress} icon={(toggle?toggleIcon:icon)} {...props} ></Button>)
 	}
 })
-
-
-
 // like TextInput       
 var TextArea = React.createClass({
     render:function(){
@@ -109,7 +106,6 @@ var TextArea = React.createClass({
 // DateTimePicker
 // CheckBox / CheckGroup
 // RadioBox / RadioGroup
-
 // NewTextIntput
 var NewTextIntput = React.createClass({
     handleChangeText:function(text){
@@ -121,9 +117,48 @@ var NewTextIntput = React.createClass({
         var {name,onChangeText,...props} = this.props;
         return (<TextInput {...props} onChangeText={this.handleChangeText} underlineColorAndroid="transparent" autoCapitalize="none"/>)
     }
+});
+             
+             
+var RadioSelect = React.createClass({
+    _onHandleClick:function(){
+        if(this.props.onPress){
+            this.props.onPress(this.props.option,this.props.topicID);
+        }
+    },
+    render:function(){
+        var {style,option,topicID,selected,...props} = this.props;
+        return(
+          <TouchableOpacity onPress = {this._onHandleClick} style = {style}>
+             <View style = {styles.raido}>
+                 <View style = {[styles.raidoInset,option == selected?styles.raidoSelect:""]}></View>
+             </View>
+          </TouchableOpacity>
+        )
+    }
 })
-
+             
+             
 var styles = StyleSheet.create({
+    raido:{
+        width:Dimensions.size["12"], 
+		height:Dimensions.size["12"],
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        borderStyle: "solid",
+        borderWidth: 1,
+        borderColor: "#0D0D0D",
+        borderRadius:Dimensions.size["6"]
+    },
+    raidoInset:{
+        width:Dimensions.size["8"], 
+		height:Dimensions.size["8"],
+        borderRadius:Dimensions.size["4"]
+    },
+    raidoSelect:{
+        backgroundColor: "#74C93C"
+    },
 	buttonContainer:{
 		paddingHorizontal:Dimensions.size["4"]
 	},
@@ -153,3 +188,5 @@ module.exports.Picker = Picker;
 module.exports.Switch = Switch;
 module.exports.TouchableHighlight = NewTouchableHighlight;
 module.exports.TouchableOpacity = NewTouchableOpacity;
+module.exports.RadioSelect = RadioSelect;
+                

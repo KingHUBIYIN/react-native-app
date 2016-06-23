@@ -2,16 +2,30 @@
 
 var React = require('react');
 var  {
-      AppRegistry,
-      Component,
       StyleSheet,
-      Text,
       View,
       WebView
 } = require('react-native');
-var DEFAULT_URL = 'http://www.lcode.org';
 
 var ReactNativeWebview = React.createClass({
+  getInitialState:function(){
+      return {
+          name: this.props.name
+      }
+  },
+  componentWillReceiveProps:function(nextProps){
+      if(nextProps.name!=this.props.name){
+          this.setState({
+                name:false
+          })
+          setTimeout(this.updateStateFromProps,100);
+      }
+  },
+  updateStateFromProps:function(){
+      this.setState({
+        name:this.props.name
+      })
+  },
   genHtmlTpml:function(name){
         const HTML = `
         <!DOCTYPE html>\n
@@ -24,14 +38,13 @@ var ReactNativeWebview = React.createClass({
               body {
                 margin: 0;
                 padding: 0;
-                background-color: "#f8f8f8";
               }
              div{
                 width: 100%;
                 height: auto;
                 font-size: 1.2em;
                 line-height: 1.6em;
-                color: "#989898";
+                color: "#fff";
              }
             </style>
           </head>
@@ -46,28 +59,29 @@ var ReactNativeWebview = React.createClass({
         `;
       return HTML;
   },
-  handleNavigationStateChange:function(navState){
-      console.log(navState);
-  },
   render: function() {
-    var HTML = this.genHtmlTpml(this.props.name);
+    var HTML = this.genHtmlTpml(this.state.name);
     var {style,name,...props} = this.props;
-    return (
-        <WebView ref="webview" style={[styles.webview_style,style]} {...props} automaticallyAdjustContentInsets={false}
-          source={{html:HTML}} 
-          startInLoadingState={true} 
-          onNavigationStateChange={this.handleNavigationStateChange}
-          domStorageEnabled={true}
-          javaScriptEnabled={true}
-          >
-        </WebView>
-    )
+    if(this.state.name){
+        return (
+            <WebView ref="webview" style={[styles.webview_style,style]} {...props} 
+              automaticallyAdjustContentInsets={true}
+              source={{html:HTML}} 
+              startInLoadingState={true} 
+              domStorageEnabled={true}
+              javaScriptEnabled={true}
+            >
+            </WebView>
+        )
+    }else{
+        return (<View/>)
+    }
   }
 });
 
 var styles = StyleSheet.create({
     webview_style:{  
-       backgroundColor:"#f8f8f8"
+       backgroundColor:"#fff"
     }
 });
 

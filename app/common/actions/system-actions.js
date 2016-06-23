@@ -87,5 +87,23 @@ module.exports = {
             type:ActionTypes.RECEIVED_STUDENT_META,
             data:data
         })
+    },
+    receivedExamErrorTopicNum:function(data){
+        SystemDispatcher.dispatch({
+            type:ActionTypes.RECEIVED_EXAM_ERROR_TOPIC_NUM,
+            data:data
+        })
+    },
+    receivedExamErrorTopic:function(data){
+        SystemDispatcher.dispatch({
+            type:ActionTypes.RECEIVED_EXAM_ERROR_TOPIC,
+            data:data
+        })
+    },
+    receivedTopicSuggest:function(data){
+        SystemDispatcher.dispatch({
+            type:ActionTypes.RECEIVED_TOPIC_SUGGEST,
+            data:data
+        })
     }
 }

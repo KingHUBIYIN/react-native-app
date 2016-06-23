@@ -25,6 +25,19 @@ var _date_picker_form = {};
 var _student_data = [];
 var _meta_data = {student:{},subject:[]};
 
+//分段获取数据
+var next_cursor = 0;
+var _wrong_next_cursor = 0;
+
+//获取错题总数
+var _topic_error_num = {};
+
+//获取错误的试卷
+var _wrong_answers = [];
+
+//攻克训练的题目
+var _topic_suggest = [];
+
 var SystemStore = assign({},EventEmitter.prototype,{
     emitChange:function(type){
         this.emit(type);
@@ -35,6 +48,15 @@ var SystemStore = assign({},EventEmitter.prototype,{
     removeChangeListener:function(type,callback){
         this.removeListener(type,callback)
     },
+    getNextCursor:function(){
+        return next_cursor;
+    },
+    getWrongNextCursor:function(){
+        return _wrong_next_cursor;
+    },
+    getExamErrorTopicNum:function(){
+        return _topic_error_num;
+    },//获取不同科目的错题总数
     getMetaData:function(){
       return _meta_data;
     },
@@ -67,30 +89,33 @@ var SystemStore = assign({},EventEmitter.prototype,{
               sum:exams.length,
               percent:exams.length?Math.round(correct_len*100/exams.length):0
           }
-      });
-	  
-        answer_sheets = answer_sheets.filter(function(ele){
-            return ele.subject_id == subjectInfo.subject_id;
         });
-        
-        var obj = {};
-        var paperlist = {};
-        var len = answer_sheets.length;
-        for(var i = 0 ; i < len ; i ++){
-            obj[answer_sheets[i].date] = true;//把所有的时间记录下来;
-        };
-        for(var key in obj){
-            var results = answer_sheets.filter(function(ele,pos){
-                return ele.date == key;
-            });
-            if(!paperlist[key]){
-                paperlist[key] = [];
+        if(answer_sheets.length > 0){
+            answer_sheets = answer_sheets.filter(function(ele){
+                return ele.subject_id == subjectInfo.subject_id;
+            });//过滤出不同科目的试卷
+
+            var obj = {};
+            var paperlist = {};
+            var len = answer_sheets.length;
+            for(var i = 0 ; i < len ; i ++){
+                obj[answer_sheets[i].date] = true;//把所有的时间记录下来;
             };
-            if(results.length > 0){
-                paperlist[key] = paperlist[key].concat(results);
-            }
-        };//把年月日相同的时间组织起来
-      return paperlist;
+            for(var key in obj){
+                var results = answer_sheets.filter(function(ele,pos){
+                    return ele.date == key;
+                });
+                if(!paperlist[key]){
+                    paperlist[key] = [];
+                };
+                if(results.length > 0){
+                    paperlist[key] = paperlist[key].concat(results);
+                }
+            };//把年月日相同的时间组织起来
+          return paperlist;
+        }else{
+            return {};
+        }
   },
     getAnswerSheet:function(answer_sheet_id){
       var answer_sheets = _student_data.filter(function(ele,pos){
@@ -119,15 +144,21 @@ var SystemStore = assign({},EventEmitter.prototype,{
               if(!_exam_info[key]){
                    _exam_info[key] = {};
               }
-              _exam_info[key] = {
-                  topic_no: key,
-                  correct: exam_info[key].correct,
-                  fullmark: exam_info[key].fullmark,
-                  score: exam_info[key].score,
-                  section_code: exam_info[key].section_code,
-                  type: exam_info[key].type
+              var topics_len = topics.length;
+              for(var i = 0; i < topics_len; i++){
+                  if(topics[i].no == key){
+                      _exam_info[key] = {
+                          topic_id: topics[i].topic_id,
+                          topic_no: key,
+                          correct: exam_info[key].correct,
+                          fullmark: exam_info[key].fullmark,
+                          score: exam_info[key].score,
+                          section_code: exam_info[key].section_code,
+                          type: exam_info[key].type
+                      }
+                  }
               }
-          }
+          };
           answer_sheets[0].exam_info.exam_info = _exam_info;
 		  var _topics = [];
 		  for(var i=0;i<topics.length;i++){
@@ -150,7 +181,7 @@ return ele.no;
       }else{
           return null;
       }
-  },//某套试卷的信息
+  },//我的作业中某套试卷的信息
     getAnswerSheetError:function(answer_sheet_id){
        var answer_sheets = _student_data.filter(function(ele,pos){
           return ele.answer_sheet_id == answer_sheet_id;
@@ -174,13 +205,19 @@ return ele.no;
                       if(!_exam_info_error[key]){
                            _exam_info_error[key] = {};
                       }//判断错题A4组合起来
-                      _exam_info_error[key] = {
-                          topic_no: key,
-                          correct: exam_info[key].correct,
-                          fullmark: exam_info[key].fullmark,
-                          score: exam_info[key].score,
-                          section_code: exam_info[key].section_code,
-                          type: exam_info[key].type
+                      var topics_len = topics.length;
+                      for(var i = 0; i < topics_len; i++){
+                          if(topics[i].no == key){
+                              _exam_info_error[key] = {
+                                  topic_id: topics[i].topic_id,
+                                  topic_no: key,
+                                  correct: exam_info[key].correct,
+                                  fullmark: exam_info[key].fullmark,
+                                  score: exam_info[key].score,
+                                  section_code: exam_info[key].section_code,
+                                  type: exam_info[key].type
+                              }
+                          }
                       }
                   }
               }else{
@@ -190,7 +227,30 @@ return ele.no;
                       if(!_exam_info_error[key]){
                            _exam_info_error[key] = {};
                       }//判断错题A3组合起来
-                      _exam_info_error[key] = {
+                      var topics_len = topics.length;
+                      for(var i = 0; i < topics_len; i++){
+                          if(topics[i].no == key){
+                              _exam_info_error[key] = {
+                                  topic_id: topics[i].topic_id,
+                                  topic_no: key,
+                                  correct: exam_info[key].correct,
+                                  fullmark: exam_info[key].fullmark,
+                                  score: exam_info[key].score,
+                                  section_code: exam_info[key].section_code,
+                                  type: exam_info[key].type
+                              }
+                          }
+                      }
+                  }
+              }//计算总体数及正确题数
+              if(!_exam_info[key]){
+                   _exam_info[key] = {};
+              }
+              var topics_len = topics.length;
+              for(var i = 0; i < topics_len; i++){
+                  if(topics[i].no == key){
+                      _exam_info[key] = {
+                          topic_id: topics[i].topic_id,
                           topic_no: key,
                           correct: exam_info[key].correct,
                           fullmark: exam_info[key].fullmark,
@@ -199,17 +259,6 @@ return ele.no;
                           type: exam_info[key].type
                       }
                   }
-              }//计算总体数及正确题数
-              if(!_exam_info[key]){
-                   _exam_info[key] = {};
-              }
-              _exam_info[key] = {
-                  topic_no: key,
-                  correct: exam_info[key].correct,
-                  fullmark: exam_info[key].fullmark,
-                  score: exam_info[key].score,
-                  section_code: exam_info[key].section_code,
-                  type: exam_info[key].type
               }
           }
           answer_sheets[0].exam_info.exam_info = _exam_info;
@@ -235,7 +284,7 @@ return ele.no;
       }else{
           return null;
       }
-    },//试题的正误判断
+    },//我的作业中试题的正误判断
     getTopicDetail:function(answer_sheet_id,topic_no){
         var topic_detail = {};
         var answer_sheet = _.filter(_student_data,function(ele,pos){
@@ -247,6 +296,7 @@ return ele.no;
              var _topic_detail = _.filter(topics,function(ele,pos){
                  return ele.no == topic_no;
              });//获取相同题号的试题详情
+             var standard_answers = answer_sheet.standard_answers;
             //组合需要的数据
             var nodes = _topic_detail[0].nodes;
             topic_detail = {
@@ -258,116 +308,52 @@ return ele.no;
                 topic_type: _topic_detail[0].topic_type,
                 subject: _topic_detail[0].subject,
                 no: _topic_detail[0].no,
-                answer: _topic_detail[0].answer,
+                std_answer: _topic_detail[0].answer,
                 answers: _topic_detail[0].answers,
                 content: _topic_detail[0].content,
-                topic_answer: _topic_detail[0].topic_answer
+                topic_options: _topic_detail[0].topic_options
             }
             return topic_detail;
         }else{
             return null;
         }
     },//我的作业中的试题详情
-    getSubjectWrongTopics:function(){
-        var _meta_data = this.getMetaData();
-        var subject = _meta_data?_meta_data.subject:[];
-        var len_subject = subject.length;
-        var len_data = _student_data.length;
-        var math_error = 0;//数学错题数
-        var chinese_error = 0;//语文错题数
-        var english_error = 0;//英语错题数
-        var _subject_wrong_topics = [];
-        if(len_subject > 0){
-             for(var i = 0 ; i < len_subject; i++){
-                 if(subject[i].cn == "数学"){
-                     for(var j = 0 ; j < len_data; j++){
-                         var spec = _student_data[j].answer_sheet.spec;
-                         var exam_info = _student_data[j].exam_info.exam_info;
-                         var subject_id = _student_data[j].exam_info.subject_id;
-                         var exams = [];
-                         for(var key in exam_info){
-                              exams.push(exam_info[key]);
-                         }
-                         if(subject[i].subject_id == subject_id){
-                              var rightTopic_len = exams.filter(function(ele,pos){
-                                  return spec == "A4"?!!ele.correct:ele.score == ele.fullmark;
-                              }).length;
-                              var errorTopic = exams.length - rightTopic_len;
-                              math_error += errorTopic;
-                         }
-                     }//遍历试卷取数学中的错题
-                     _subject_wrong_topics.push({
-                         subject: subject[i].subject,
-                         subject_id: subject[i].subject_id,
-                         name: subject[i].cn,
-                         topic_error:math_error 
-                     })
-                 }
-                 if(subject[i].cn == "语文"){
-                     for(var j = 0 ; j < len_data; j++){
-                         var spec = _student_data[j].answer_sheet.spec;
-                         var exam_info = _student_data[j].exam_info.exam_info;
-                         var subject_id = _student_data[j].exam_info.subject_id;
-                         var exams = [];
-                          for(var key in exam_info){
-                              exams.push(exam_info[key]);
-                          }
-                         if(subject[i].subject_id == subject_id){
-                              var rightTopic_len = exams.filter(function(ele,pos){
-                                  return spec == "A4"?!!ele.correct:ele.score == ele.fullmark;
-                              }).length;
-                              var errorTopic = exams.length - rightTopic_len;
-                              math_error += errorTopic;
-                         }
-                     }//遍历试卷取数学中的错题
-                     _subject_wrong_topics.push({
-                         subject: subject[i].subject,
-                         subject_id: subject[i].subject_id,
-                         name: subject[i].cn,
-                         topic_error:chinese_error 
-                     })
-                 }
-                 if(subject[i].cn == "英语"){
-                     for(var j = 0 ; j < len_data; j++){
-                         var spec = _student_data[j].answer_sheet.spec;
-                         var exam_info = _student_data[j].exam_info.exam_info;
-                         var subject_id = _student_data[j].exam_info.subject_id;
-                         var exams = [];
-                          for(var key in exam_info){
-                              exams.push(exam_info[key]);
-                          }
-                         if(subject[i].subject_id == subject_id){
-                              var rightTopic_len = exams.filter(function(ele,pos){
-                                  return spec == "A4"?!!ele.correct:ele.score == ele.fullmark;
-                              }).length;
-                              var errorTopic = exams.length - rightTopic_len;
-                              math_error += errorTopic;
-                         }
-                     }//遍历试卷取数学中的错题
-                     _subject_wrong_topics.push({
-                         subject: subject[i].subject,
-                         subject_id: subject[i].subject_id,
-                         name: subject[i].cn,
-                         topic_error:english_error 
-                     })
-                 }
-             }
-        };
-        
-        return _subject_wrong_topics;
-    },//科目错题数目汇总
+    getWrongAnswerSheets:function(subject){
+        var subjectInfo = this.getSubjectByName(subject);
+        var answer_sheets = _.map(_wrong_answers,function(ele){
+          var exam = ele.error_topics;
+          var answer_sheet = ele.answer_sheet;
+          var spec = answer_sheet.spec;
+          var exams = [];
+          for(var i in exam){
+              exams.push(exam[i]);
+          }
+
+          return {
+              id:ele.answer_sheet_id,
+              name:answer_sheet.name,
+              subject_id:ele.subject_id,
+              date:new Date(ele.last_modify*1000).Format("yyyy/MM/dd"),
+              error:exams.length
+          }
+        });
+        answer_sheets = answer_sheets.filter(function(ele){
+            return ele.subject_id == subjectInfo.subject_id;
+        });//过滤出不同科目的试卷
+      return answer_sheets;
+    },//分离不同科目错题试卷列表
     getWrongTopicChapter:function(subject){
         var subjectInfo = this.getSubjectByName(subject);
-        _student_data = _student_data.filter(function(ele){
-            return ele.answer_sheet.subject_id == subjectInfo.subject_id;
+        _wrong_answers = _wrong_answers.filter(function(ele){
+            return ele.subject_id == subjectInfo.subject_id;
         });//过滤出对应科目的试卷列表
         
         
-        var len_all_data = _student_data.length;//对应科目paper_list长度
+        var len_all_data = _wrong_answers.length;//对应科目paper_list长度
         var _topics = [];//申明一个数组存储所有题
         
         for(var i = 0 ; i < len_all_data; i++ ){
-            var topics = _student_data[i].topics;
+            var topics = _wrong_answers[i].topics;
             _topics = _topics.concat(topics);
         }//所有的题目数据合并到_topics中;
         
@@ -385,65 +371,17 @@ return ele.no;
         var chapter = {};//声明一个对象储存章对应的试卷列表
         for(var key in obj){
             for(var m = 0 ; m < len_all_data; m++ ){
-                var answer_sheet = _student_data[m].answer_sheet;
-                var spec = _student_data[m].answer_sheet.spec;
-                var topics = _student_data[m].topics;
-                var exam_info = _student_data[m].exam_info.exam_info;
-                var exams = [];
+                var topics = _wrong_answers[m].topics;
                 var topics_len = topics.length;
-                for(var k in exam_info){
-                    exams.push({
-                        no: k,
-                        exam_info:exam_info[k]
-                    })
+                for(var n = 0; n < topics_len ; n++){
+                    var nodes = topics[n].nodes?topics[n].nodes:[];
+                    if(nodes[0] == key){
+                        if(!chapter[key]){
+                            chapter[key] = [];
+                        };
+                        chapter[key].push(_wrong_answers[m]);
+                    }
                 };
-                var exams_len = exams.length;
-                for(var n = 0 ; n < exams_len; n++){
-                    if(spec == "A4"){
-                        if(exams[n].exam_info.correct == 0 || exams[n].exam_info.correct == null){
-                            var no  = exams[n].no;
-                            var _topic_error = topics.filter(function(ele,pos){
-                                return ele.no == no;
-                            });
-                            if(_topic_error.length > 0){
-                                var nodes = !!_topic_error[0].nodes?_topic_error[0].nodes:[];
-                                if(nodes.length > 0 && nodes[0] == key){
-                                      if(!chapter[key]){
-                                        chapter[key] = [];
-                                    }
-                                    chapter[key] = chapter[key].concat({
-                                        answer_sheet_id: answer_sheet.answer_sheet_id,
-                                        name: answer_sheet.name,
-                                        subject_id: answer_sheet.subject_id,
-                                        spec: spec
-                                    })
-                                }
-                            }
-                        }
-                    }
-                    if(spec == "A3"){
-                        if(exams[n].exam_info.correct == 0 || exams[n].exam_info.correct == null){
-                            var no  = exams[n].no;
-                            var _topic_error = topics.filter(function(ele,pos){
-                                return ele.no == no;
-                            });
-                            if(_topic_error.length > 0){
-                                var nodes = !!_topic_error[0].nodes?_topic_error[0].nodes:[];
-                                if(nodes.length > 0 && nodes[0] == key){
-                                      if(!chapter[key]){
-                                        chapter[key] = [];
-                                    }
-                                    chapter[key] = chapter[key].concat({
-                                        answer_sheet_id: answer_sheet.answer_sheet_id,
-                                        name: answer_sheet.name,
-                                        subject_id: answer_sheet.subject_id,
-                                        spec: spec
-                                    })
-                                }
-                            }
-                        }
-                    }
-                }
             }
         };
         //去除重复
@@ -461,7 +399,62 @@ return ele.no;
             chapter[a] = arr
         }
         return chapter
-    },//章节分组
+    },//分离不同科目章节分组
+    getWrongTopicByType:function(answer_sheet_id,topicType){
+        var _wrong_answer = _wrong_answers.filter(function(ele,pos){
+            return ele.answer_sheet_id == answer_sheet_id;
+        });//过滤出某涛试卷的全部信息
+        var wrong_topic = [];
+        var topics = _wrong_answer[0].topics;
+        var topics_len = topics.length;
+        if(!!topicType){
+            wrong_topic = _.filter(topics,function(ele,pos){
+                return ele.topic_type == topicType;
+            });
+            wrong_topic = _.sortBy(wrong_topic,function(ele,pos){
+                return ele.no;
+            });
+            return wrong_topic;
+        };//根据不同题目类型筛选题目
+        for(var i = 0; i < topics_len; i++){
+            wrong_topic.push(topics[i]);
+        }
+        wrong_topic = _.sortBy(wrong_topic,function(ele,pos){
+            return ele.no;
+        });
+        return wrong_topic;
+    },//根据类型筛选不同的题目
+    getWrongTopicDetailByTopicId:function(answer_sheet_id,topicId){
+         var _wrong_answer = _wrong_answers.filter(function(ele,pos){
+            return ele.answer_sheet_id == answer_sheet_id;
+         });//过滤出某涛试卷的全部信息
+         var topics = _wrong_answer[0].topics;
+         var topic = _.filter(topics,function(ele,pos){
+             return ele.topic_id == topicId;
+         });//获取单倒试题详细信息
+         return topic[0];
+    },//根据试卷ID及题目ID筛选出试题详细信息
+    getTopicSuggest:function(){
+        for(var i = 0 ; i < _topic_suggest.length; i++){
+            var topic_options = !!_topic_suggest[i].topic_options?_topic_suggest[i].topic_options:[];
+            if(topic_options.length > 0){
+                topic_options[0].option = "A";
+                topic_options[0].topic_id = _topic_suggest[i].topic_id;
+                topic_options[0].selected = "";
+                topic_options[1].option = "B";
+                topic_options[1].topic_id = _topic_suggest[i].topic_id;
+                topic_options[1].selected = "";
+                topic_options[2].option = "C";
+                topic_options[2].topic_id = _topic_suggest[i].topic_id;
+                topic_options[2].selected = "";
+                topic_options[3].option = "D";
+                topic_options[3].topic_id = _topic_suggest[i].topic_id;
+                topic_options[3].selected = "";
+                _topic_suggest.topic_options = topic_options;
+            };
+        }
+        return _topic_suggest;
+    },//攻克训练的题目
 	getErrorMsg:function(){
 		return _error_msg;
 	},
@@ -609,10 +602,25 @@ SystemStore.dispatchToken = SystemDispatcher.register(function(action){
 			SystemStore.emitChange(EventTypes.POSTED_SEND_CARRY_FORM);
 			break;
         case ActionTypes.RECEIVED_ALL_DATA:
-            _student_data = action.data.filter(function(ele,pos){
+            var student_data = action.data.datas.filter(function(ele,pos){
                     return ele.pages && ele.pages.length>0;
             });
-
+            _student_data = _student_data.concat(student_data);
+            next_cursor = action.data.next_cursor;
+            
+            //对_student_data去重
+            var obj = {};
+            var data_len = _student_data.length;
+            for(var i = 0 ; i < data_len; i++){
+              obj[_student_data[i].answer_sheet_id] = _student_data[i]; 
+            };
+            var data_arr = [];
+            for(var key in obj){
+              data_arr.push(obj[key])
+            };
+            _student_data = data_arr;
+            
+            
             for(var i=0;i<_student_data.length;i++){
                 _student_data[i].topics = TopicAPIUtils.parseTopics(_student_data[i].topics);
             }
@@ -622,7 +630,41 @@ SystemStore.dispatchToken = SystemDispatcher.register(function(action){
         case ActionTypes.RECEIVED_STUDENT_META:
             _meta_data = action.data;
             SystemStore.emitChange(EventTypes.RECEIVED_STUDENT_META);
-            break;
+          break;
+       case ActionTypes.RECEIVED_EXAM_ERROR_TOPIC_NUM:
+            _topic_error_num = action.data;
+            SystemStore.emitChange(EventTypes.RECEIVED_EXAM_ERROR_TOPIC_NUM);
+          break;
+       case ActionTypes.RECEIVED_EXAM_ERROR_TOPIC:
+            var wrong_answers = action.data.datas.filter(function(ele,pos){
+                    return ele.pages && ele.pages.length>0;
+            });
+            _wrong_answers = _wrong_answers.concat(wrong_answers);
+            _wrong_next_cursor = action.data.next_cursor;
+            
+            //对_student_data去重
+            var obj = {};
+            var data_len = _wrong_answers.length;
+            for(var i = 0 ; i < data_len; i++){
+              obj[_wrong_answers[i].answer_sheet_id] = _wrong_answers[i]; 
+            };
+            var data_arr = [];
+            for(var key in obj){
+              data_arr.push(obj[key])
+            };
+            _wrong_answers = data_arr;
+            
+            
+            for(var i=0;i<_wrong_answers.length;i++){
+                _wrong_answers[i].topics = TopicAPIUtils.parseTopics(_wrong_answers[i].topics);
+            }
+             _wrong_answers = _.sortBy(_wrong_answers,function(ele){return -ele.date});
+            SystemStore.emitChange(EventTypes.RECEIVED_EXAM_ERROR_TOPIC);
+          break;   
+      case ActionTypes.RECEIVED_TOPIC_SUGGEST:
+            _topic_suggest = action.data;
+            SystemStore.emitChange(EventTypes.RECEIVED_TOPIC_SUGGEST);
+          break;
     }
 })
 

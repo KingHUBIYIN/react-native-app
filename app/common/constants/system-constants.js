@@ -16,7 +16,10 @@ module.exports = {
 		CHANGED_CATEGORY_FORM:null,
 		CHANGED_DATE_PICKER_FORM:null,
         RECEIVED_ALL_DATA:null,
-        RECEIVED_STUDENT_META:null
+        RECEIVED_STUDENT_META:null,
+        RECEIVED_EXAM_ERROR_TOPIC_NUM:null,
+        RECEIVED_EXAM_ERROR_TOPIC:null,
+        RECEIVED_TOPIC_SUGGEST:null
     }),
     EventTypes:keyMirror({
 		RECEIVED_ERROR_MSG:null,
@@ -32,6 +35,9 @@ module.exports = {
 		CHANGED_CATEGORY_FORM:null,
 		CHANGED_DATE_PICKER_FORM:null,
         RECEIVED_ALL_DATA:null,
-        RECEIVED_STUDENT_META:null
+        RECEIVED_STUDENT_META:null,
+        RECEIVED_EXAM_ERROR_TOPIC_NUM:null,
+        RECEIVED_EXAM_ERROR_TOPIC:null,
+        RECEIVED_TOPIC_SUGGEST:null
     })
 }

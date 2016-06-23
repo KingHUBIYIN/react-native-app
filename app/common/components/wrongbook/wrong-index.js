@@ -15,8 +15,10 @@ var {
 var Dimensions = require('../base/react-native-dimensions');
 var {Link,History} = require('../base/react-native-router');
 var TabBars = require('../base/tabbars');
-var {ContentContainer} = require('../base/system-container')
+var {ContentContainer,RowContainer} = require('../base/system-container')
 var ToolBar = require('../base/react-native-toolbar');
+var WebAPIUtils = require('../../utils/web-api-utils');
+var {ToggleButton} = require('../base/react-native-form');
 
 var SystemStore = require('../../stores/system-store');
 var {EventTypes} = require('../../constants/system-constants');
@@ -53,33 +55,43 @@ var HomeListView = React.createClass({
     _onWrongChoiceChapter:function(){
         History.pushRoute("/wrong/index/" +this.props.subject + "/ChoiceChapter");
     },
+    onHelpIconPress:function(e,name,toggle){
+	},
     render:function(){
         var student_info = this.state.student_info;
         return (<ContentContainer>
                         <ToolBar navIcon={{title:"<科目"}}  title={student_info.cn + "错题本"} onNavIconPress={this.onNavIconPress}></ToolBar>
-                        <View style = {styles.titleText}>
-                            <TouchableHighlight underlayColor = "#D8D8D8" onPress = {this._onWrongChoiceAll}>
-                                <View style = {[styles.titleSelect,styles.bordStyle]}>
-                                        <Text style = {styles.textSize}>全部</Text>
-                                        <Image source = {btn_drop_down} style = {styles.imageStyle}/>
-                                </View>
-                            </TouchableHighlight>
-                            <TouchableHighlight underlayColor = "#D8D8D8" onPress = {this._onWrongChoiceChapter}>
-                                <View style = {styles.titleSelect}>
-                                        <Text style = {styles.textSize}>章节</Text>
-                                        <Image source = {btn_drop_down}  style = {styles.imageStyle}/>
-                                </View>
-                            </TouchableHighlight>
+                        <View style ={{backgroundColor: "#fff"}}>
+                            <View style = {styles.titleText}>
+                                <TouchableHighlight underlayColor = "#D8D8D8" onPress = {this._onWrongChoiceAll}>
+                                    <View style = {[styles.titleSelect,styles.bordStyle]}>
+                                            <View><Text style = {styles.textSize}>全部</Text></View>
+                                            <ToggleButton icon={btn_drop_down} toggleIcon={btn_drop_up} style={styles.next} iconHeight={Dimensions.size["8"]} iconWidth={Dimensions.size["8"]} onPress={this.onHelpIconPress}/>
+                                    </View>
+                                </TouchableHighlight>
+                                <TouchableHighlight underlayColor = "#D8D8D8" onPress = {this._onWrongChoiceChapter}>
+                                    <View style = {styles.titleSelect}>
+                                            <View><Text style = {styles.textSize}>章节</Text></View>
+                                            <ToggleButton icon={btn_drop_down} toggleIcon={btn_drop_up} style={styles.next} iconHeight={Dimensions.size["8"]} iconWidth={Dimensions.size["8"]} onPress={this.onHelpIconPress}/>
+                                    </View>
+                                </TouchableHighlight>
+                            </View>
+                            <View>
+                                {this.props.children}
+                            </View>
                         </View>
-                        <View>
-                            {this.props.children}
-                        </View>
-                </ContentContainer>)
+                    </ContentContainer>)
     }
 });
         
     
 var styles = StyleSheet.create({
+    next:{
+		width:Dimensions.size["8"],
+		height:Dimensions.size["8"],
+        marginTop: 5,
+		paddingHorizontal:Dimensions.size["0"]
+	},
     titleText:{
         height: Dimensions.size["20"],
         flexDirection:"row",

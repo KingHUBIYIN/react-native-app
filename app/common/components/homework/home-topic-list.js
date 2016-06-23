@@ -24,7 +24,7 @@ var {EventTypes} = require('../../constants/system-constants');
 var TopicNo = React.createClass({
     handleClick:function(){
         if(this.props.onPress){
-            this.props.onPress(this.props.rowData.topic_no);
+            this.props.onPress(this.props.rowData.topic_no,this.props.rowData.topic_id);
         }
     },
     render:function(){
@@ -48,7 +48,7 @@ var HomeListView = React.createClass({
             student_info: SystemStore.getSubjectByName(this.props.subject),
             getAnswerSheet: SystemStore.getAnswerSheet(this.props.answer_sheet_id),
             exam_info: ds.cloneWithRows(SystemStore.getAnswerSheet(this.props.answer_sheet_id).exam_info.exam_info),
-            form_data: ""
+            form_data: {}
         }
     },
     componentDidMount:function(){
@@ -65,20 +65,25 @@ var HomeListView = React.createClass({
     onNavIconPress:function(){
 		History.popRoute();
 	},
-    _onTopicDetail:function(topic_no){
+    _onTopicDetail:function(topic_no,topic_id){
         var form_data = this.state.form_data;
-        form_data  = topic_no;
+        form_data["topic_no"]  = topic_no;
+        form_data["topic_id"]  = topic_id;
         this.setState({
             form_data: form_data
         })
     },
     _onQueryDetail:function(){
         var form_data = this.state.form_data;
-        if(form_data == ""){
-            Alert.alert("","请选择要查看的试题",[{text:"确定"}]);
+        var arr  = [];
+        for(var key in form_data){
+            arr.push(form_data[key])
+        }
+        if(arr.length == 0){
+             Alert.alert("提示","请选择查看的试题",[{text: '确定', onPress: () => {}}]);
             return false;
         }
-        History.pushRoute("/home/details/"+this.props.subject + "/" + this.props.answer_sheet_id+"/"+form_data);
+        History.pushRoute("/home/details/"+this.props.subject + "/" + this.props.answer_sheet_id+"/"+form_data.topic_no +"/" +form_data.topic_id );
     },
     _onQueryErrorTopics:function(){
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});

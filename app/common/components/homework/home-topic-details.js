@@ -26,7 +26,7 @@ var ReactNativeWebview = require('../base/react-native-webview');
 
 var ico_train = require("../../images/ico_train.png");
 
-var HomeListView = React.createClass({
+var HomeTopicDetailView = React.createClass({
     getInitialState:function(){
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         return {
@@ -49,6 +49,9 @@ var HomeListView = React.createClass({
     onNavIconPress:function(){
 		History.popRoute();
 	},
+    _onJumpPratice:function(){
+        History.pushRoute("/wrong/practice/"+this.props.topic_id)
+    },
     _renderRow:function(rowData, sectionID, rowID){
         return(
             <ReactNativeWebview name = {rowData} style = {styles.selectContent} />
@@ -78,7 +81,7 @@ var HomeListView = React.createClass({
                             <View style = {styles.blankStyle1}></View>
                             <View style = {styles.paddingStyles}>
                                     <View><Text style = {styles.fontStyle}>正确答案：</Text></View>
-                                    <ReactNativeWebview name = {_topic_detail.answer} style = {styles.viewContent} />
+                                    <ReactNativeWebview name = {_topic_detail.std_answer} style = {styles.viewContent} />
                             </View>
                             <View style = {styles.paddingStyles}>
                                     <View><Text style = {styles.fontStyle}>解：</Text></View>
@@ -100,12 +103,12 @@ var HomeListView = React.createClass({
                         </ScrollView>
                         
                         <View style = {styles.footer}>
-                             <TouchableHighlight>
+                             <TouchableOpacity onPress = {this._onJumpPratice}>
                                 <View style = {styles.footerCotent}>
                                     <Image source = {ico_train} />
                                     <Text style = {styles.footSize}>攻克训练</Text>
                                 </View>
-                             </TouchableHighlight>
+                             </TouchableOpacity>
                         </View>
                 </ContentContainer>)
     }
@@ -114,7 +117,8 @@ var HomeListView = React.createClass({
 var styles = StyleSheet.create({
     rowContainer:{
         paddingLeft: Dimensions.size["5"],
-        paddingRight: Dimensions.size["5"]
+        paddingRight: Dimensions.size["5"],
+        backgroundColor: "#fff"
     },
     topicTitle:{
         width: Dimensions.screenWidth  - Dimensions.size["10"],
@@ -143,7 +147,8 @@ var styles = StyleSheet.create({
         height: Dimensions.screenHeight - Dimensions.toolBarHeight - Dimensions.size["22"],
         paddingTop: Dimensions.size["6"],
         paddingLeft: Dimensions.size["5"],
-        paddingRight: Dimensions.size["5"]
+        paddingRight: Dimensions.size["5"],
+        backgroundColor: "#fff"
     },
     viewContent:{
         width: Dimensions.screenWidth - Dimensions.size["10"],
@@ -196,4 +201,4 @@ var styles = StyleSheet.create({
     }
 })
 
-module.exports = HomeListView;
+module.exports = HomeTopicDetailView;

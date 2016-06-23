@@ -9,13 +9,15 @@
   },
   "dependencies": {
     "events": "^1.1.0",
-    "react": "15.0.2",
-    "react-native": "0.26.3",
+    "react": "15.1.0",
+    "react-native": "0.27.1",
     "flux": "^2.1.1",
     "keymirror": "^0.1.1",
     "object-assign": "^2.0.0",
     "react-native-orientation": "^1.16.0",
-    "react-native-svg": "^2.1.0"
+    "react-native-svg": "^2.1.0",
+    "rnpm":"^1.8.0",
+    "underscore":"^1.8.3"
   },
   "devDependencies": {
     "rnpm-plugin-upgrade": "^0.26.0"

@@ -17,6 +17,7 @@ var {Link,History} = require('../base/react-native-router');
 var TabBars = require('../base/tabbars');
 var {ContentContainer} = require('../base/system-container')
 var ToolBar = require('../base/react-native-toolbar');
+var WebAPIUtils = require('../../utils/web-api-utils');
 
 var SystemStore = require('../../stores/system-store');
 var {EventTypes} = require('../../constants/system-constants');
@@ -24,7 +25,7 @@ var {EventTypes} = require('../../constants/system-constants');
 var RenderRow = React.createClass({
     handlePress:function(){
         if(this.props.onPress){
-            this.props.onPress("/wrong/index/" +this.props.subject + "/WrongMain/" +this.props.rowData[0].id);
+            this.props.onPress("/wrong/index/" +this.props.subject + "/WrongMain/" +this.props.rowData.id);
         }
     },
     render: function(){
@@ -32,7 +33,7 @@ var RenderRow = React.createClass({
         return(
             <TouchableHighlight underlayColor = "#D8D8D8" onPress = {this.handlePress}>
                     <View style = {styles.answerList}>
-                            <Text style = {styles.textSize}>{rowData[0].name}</Text>
+                            <Text style = {styles.textSize}>{rowData.name}</Text>
                     </View>
             </TouchableHighlight>
         )
@@ -43,8 +44,28 @@ var HomeListView = React.createClass({
     getInitialState:function(){
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         return {
-            answer_sheets: ds.cloneWithRows(SystemStore.getAnswerSheets(this.props.subject))
+            answer_sheets: ds.cloneWithRows(SystemStore.getWrongAnswerSheets(this.props.subject)),
+            student_info:SystemStore.getSubjectByName(this.props.subject)
         }
+    },
+    componentDidMount:function(){
+        var student_info = SystemStore.getSubjectByName(this.props.subject);
+        WebAPIUtils.getExamErrorTopic({"subject_id":student_info.subject_id,"cursor":0,"page_num":10});
+        SystemStore.addChangeListener(EventTypes.RECEIVED_EXAM_ERROR_TOPIC,this._onChange);
+    },
+    componentWillUnmount:function(){
+        SystemStore.removeChangeListener(EventTypes.RECEIVED_EXAM_ERROR_TOPIC,this._onChange);
+    },
+    _onChange:function(){
+        var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.setState({
+            answer_sheets: ds.cloneWithRows(SystemStore.getWrongAnswerSheets(this.props.subject))
+        })
+    },
+    _getExamErrorTopic:function(){
+        var student_info = this.state.student_info;
+        var _wrong_next_cursor = SystemStore.getWrongNextCursor();
+        WebAPIUtils.getExamErrorTopic({"subject_id":student_info.subject_id,"cursor":_wrong_next_cursor,"page_num":10});
     },
     _onRenderRow:function(rowData,sectionID,rowID){
         return(
@@ -61,9 +82,11 @@ var HomeListView = React.createClass({
                 <View style = {styles.rowContent}>
                       <View style = {styles.allTitle}><Text style = {styles.textSize}>全部作业</Text></View>
                       <ListView 
-                            enableEmptySections={true} 
-                            dataSource = {answer_sheets}
-                            renderRow = {this._onRenderRow}
+                        enableEmptySections={true} 
+                        onEndReachedThreshold = {10}
+                        dataSource = {answer_sheets}
+                        renderRow = {this._onRenderRow}
+                        onEndReached = {this._getExamErrorTopic}
                       />
                 </View>
          </ScrollView>

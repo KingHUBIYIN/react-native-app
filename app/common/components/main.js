@@ -31,6 +31,7 @@ var WrongPracticeView = require('./wrongbook/wrong-practice');
 var WrongTopicView = require('./wrongbook/wrong-topic');
 var WrongSubjectView = require('./wrongbook/subject-list');
 var WrongPracticeEnd = require('./wrongbook/practice-end');
+var WrongPractice = require('./wrongbook/wrong-practice');
 var WrongChoiceAll = require('./wrongbook/wrong_choice_all');
 var WrongChoiceChapter = require('./wrongbook/wrong_choice_chapter');
 var WrongMain = require('./wrongbook/wrong_main');
@@ -58,10 +59,7 @@ var {Route,Router,History} = require('./base/react-native-router')
 var SystemStore = require('../stores/system-store')
 var {EventTypes} = require('../constants/system-constants')
 
-var WebAPIUtils = require('../utils/web-api-utils')
-//进入系统请求全部数据
-WebAPIUtils.getAllData();
-WebAPIUtils.getStudentMeta();
+
 
 
 var MainApp = React.createClass({
@@ -79,7 +77,7 @@ var RouterApp = React.createClass({
                                 <Route component={HomeIndexView} path="index"></Route>
 								<Route component={HomeListView} path="list/:subject"></Route>
 								<Route component={HomeTopicView} path="topic/:subject/:answer_sheet_id"></Route>
-								<Route component={HomeTopicDetails} path="details/:subject/:answer_sheet_id/:topic_no"></Route>
+								<Route component={HomeTopicDetails} path="details/:subject/:answer_sheet_id/:topic_no/:topic_id"></Route>
                         </Route>
                         <Route component={AnalysisView} path="analysis">
                                 <Route component={AnalysisIndexView} path="index">
@@ -96,9 +94,10 @@ var RouterApp = React.createClass({
                                         <Route component={WrongMain} path="WrongMain/:answer_sheet_id"></Route>
                                  </Route>
 								 <Route component={WrongPracticeView} path="practice"></Route>
-								 <Route component={WrongTopicView} path="topic"></Route>
+								 <Route component={WrongTopicView} path="topic/:answer_sheet_id/:topic_id"></Route>
 								 <Route component={WrongSubjectView} path="subject"></Route>
-								 <Route component={WrongPracticeEnd} path="practice"></Route>
+								 <Route component={WrongPractice} path="practice/:topic_id"></Route>
+								 <Route component={WrongPracticeEnd} path="practiceEnd/:topic_id/:form_data"></Route>
                         </Route>
                         <Route component={UserView} path="user">
                                 <Route component={UserIndexView} path="index"></Route>
