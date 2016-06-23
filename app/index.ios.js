@@ -10,6 +10,7 @@ var WebAPIUtils = require('./common/utils/web-api-utils');
 var DateTimeAPIUtils = require('./common/utils/datetime-utils');
 
 DateTimeAPIUtils.init();
+
 var app = React.createClass({
   componentDidMount:function(){
         // test
@@ -17,7 +18,7 @@ var app = React.createClass({
   },
   render: function() {
     return (
-      <MainApp />
+      <MainApp ref="root" />
     );
   }
 });
