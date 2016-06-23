@@ -1,6 +1,6 @@
 var React = require('react');
 var Arc = require('./Arc.react');
-var {Svg,G} = require('react-native-svg');
+var {Svg,G,Text} = require('react-native-svg');
 module.exports = React.createClass({
       displayName: 'PieChart',
       propTypes: {
@@ -39,7 +39,7 @@ module.exports = React.createClass({
                 percent:Math.round(percent*100),
                 startAngle:startAngle,
                 endAngle:endAngle,
-                backgroundColor:props.colors[pos%props.colors.length]
+                backgroundColor:ele.color?ele.color:props.colors[pos%props.colors.length]
             }
         });
         return chartData;
@@ -61,13 +61,13 @@ module.exports = React.createClass({
         });
         
         return (
-            <Svg className="piechart" width={props.radius} height={props.radius}>
-                <G className="piechart-pie" transform={"translate("+props.radius/2+","+props.radius/2+")"}>
+            <Svg className="piechart" width={props.radius} height={props.radius} >
+                <G className="piechart-pie" x={props.radius/4} y={props.radius/4}>
                     {arcs}
                     <G className="piechart-txts">
-                            <text className="txts-title" y={-props.radius/5 } style={{"textAnchor":"middle","fontSize":"20px","fill":"#737373"}}>{props.title}</text>
-                            <text className="txts-value" y={25} style={{"textAnchor":"middle","fontSize":"76px","fill":"#91DE74"}}>{chartData[0].sum?chartData[0].percent+"%":"暂无考试"}</text>
-                            <text className="txts-subtitle" y={ props.radius/5+20}  style={{"textAnchor":"middle","fontSize":"20px","fill":"#737373"}}>{"题目数量："+chartData[0].sum}</text>
+                            <Text className="txts-title" y={-props.radius/5 } style={{"textAnchor":"middle","fontSize":"20px","fill":"#737373"}}>{props.title}</Text>
+                            <Text className="txts-value" y={25} style={{"textAnchor":"middle","fontSize":"76px","fill":"#91DE74"}}>{chartData[0].sum?chartData[0].percent+"%":"暂无考试"}</Text>
+                            <Text className="txts-subtitle" y={ props.radius/5+20}  style={{"textAnchor":"middle","fontSize":"20px","fill":"#737373"}}>{"题目数量："+chartData[0].sum}</Text>
                     </G>
                 </G>
             </Svg>

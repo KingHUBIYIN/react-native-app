@@ -21,14 +21,14 @@ module.exports = React.createClass({
             {
                 data.map(function(ele,pos){
                     return (
-                        <G className="xaxis">
+                        <G className="xaxis" key={pos}>
                             <Line x1={ele.x1} y1={ele.y1} x2={ele.x2} y2={ele.y2} stroke={props.fill}></Line>
                             <Text textAnchor="middle" x={ele.x1} y={ele.y2+17}  fill={props.textColor}>{ele.name}</Text>
                         </G>
                     )
                 })  
             }
-        </g>
+        </G>
     );
   }
 });

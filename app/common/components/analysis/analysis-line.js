@@ -5,6 +5,7 @@ var {
     View
 } = require('react-native')
 var NavBars = require('../base/navbars');
+var LineChart = require('../charts/LineChart.react');
 var SystemStore = require('../../stores/system-store');
 var WebAPIActions = require('../../actions/web-api-actions');
 var {EventTypes} = require('../../constants/system-constants');
@@ -26,12 +27,17 @@ var AnalysisLineView = React.createClass({
 	componentWillUnmout:function(){
 		SystemStore.removeChangeListener(EventTypes.RECEIVED_ALL_EXAM_INFO,this._onChange);
 	},
+	_onChange:function(){
+		this.setState({
+			data:SystemStore.getChartData()
+		})
+	},
     render:function(){
 		var data = this.state.data;
         return (<View>
                        <NavBars name="/analysis/index/line" />
 					   <View>
-							<LineChart data={data.line} width={width} height={width}></LineChart>
+							<LineChart datas={data.line} width={width} height={width}></LineChart>
 					   </View>
 					   <View>
 							<View>

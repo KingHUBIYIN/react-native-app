@@ -91,14 +91,14 @@ module.exports = React.createClass({
         
         return (
             <Svg className="linechart" width={props.width} height={props.height} >
-                    <G className="linechart-graphics" transform="translate(45,10)">
+                    <G className="linechart-graphics" x={45} y={10} >
                             <XAxis data={chartData.xValues} fill={ props.axiasFill}/>
                             <YAxis data={chartData.yValues} fill={ props.axiasFill}/>
                             <G className="graphics-lines" >
                                 {lines}
                             </G>
                     </G>
-            </svg>
+            </Svg>
         );
       }
 });

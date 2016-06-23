@@ -503,11 +503,11 @@ return ele.no;
           }
       ]
       
-      answer_sheets = _.sortBy(answer_sheets,function(ele){
+      var answer_sheets = _.sortBy(answer_sheets,function(ele){
           return - ele.date;
       })
       
-      weeks = answer_sheets.filter(function(ele){
+      var weeks = answer_sheets.filter(function(ele){
           var today = new Date();
           var mon = new Date().addDate(-today.getDay());
           var sun = new Date().addDate(7-today.getDay());
@@ -515,7 +515,7 @@ return ele.no;
           return _date>mon.valueOf() && _date<sun.valueOf();
       });
       
-      months = answer_sheets.filter(function(ele){
+      var months = answer_sheets.filter(function(ele){
           var today = new Date();
           var firstDay = new Date().addDate(-today.getDate());
           var lastDay = new Date().addDate(today.MonthlyNum()-today.getDate());
@@ -551,8 +551,8 @@ return ele.no;
                     {
                         seriesName:"本次",
                         values:[
-                                  { name: 'correct',label:"正确", value: pieData[0].correct ,color:"#91DE74" },
-                                  { name: 'wrong',label:"错误", value: pieData[0].error,color:"#FF7E60" },
+                                  { name: 'correct',label:"正确", value: pieData[0].correct ,color:"rgba(255,255,255,0.6)" },
+                                  { name: 'wrong',label:"错误", value: pieData[0].error,color:"rgba(0,0,0,0.1)" },
                                   { name: 'undo',label:"未做", value: 0,color:"#CCCCCC" }
                         ],
                         sum:pieData[0].sum
@@ -560,8 +560,8 @@ return ele.no;
                     {
                         seriesName:"本周",
                         values:[
-                                  { name: 'correct',label:"正确", value: pieData[1].correct,color:"#91DE74" },
-                                  { name: 'wrong',label:"错误", value: pieData[1].error,color:"#FF7E60" },
+                                  { name: 'correct',label:"正确", value: pieData[1].correct,color:"rgba(255,255,255,0.6)" },
+                                  { name: 'wrong',label:"错误", value: pieData[1].error,color:"rgba(0,0,0,0.1)" },
                                   { name: 'undo',label:"未做", value: 0,color:"#CCCCCC" }
                         ],
                         sum:pieData[1].sum
@@ -569,8 +569,8 @@ return ele.no;
                     {
                         seriesName:"本月",
                         values:[
-                                  { name: 'correct',label:"正确", value: pieData[2].correct,color:"#91DE74" },
-                                  { name: 'wrong',label:"错误", value: pieData[2].error,color:"#FF7E60" },
+                                  { name: 'correct',label:"正确", value: pieData[2].correct,color:"rgba(255,255,255,0.6)" },
+                                  { name: 'wrong',label:"错误", value: pieData[2].error,color:"rgba(0,0,0,0.1)" },
                                   { name: 'undo',label:"未做", value: 0,color:"#CCCCCC" }
                         ],
                         sum:pieData[2].sum
@@ -578,8 +578,8 @@ return ele.no;
                     {
                         seriesName:"累计",
                         values:[
-                                  { name: 'correct',label:"正确", value: pieData[3].correct,color:"#91DE74" },
-                                  { name: 'wrong',label:"错误", value: pieData[3].error,color:"#FF7E60" },
+                                  { name: 'correct',label:"正确", value: pieData[3].correct,color:"rgba(255,255,255,0.6)" },
+                                  { name: 'wrong',label:"错误", value: pieData[3].error,color:"rgba(0,0,0,0.1)" },
                                   { name: 'undo',label:"未做", value: 0,color:"#CCCCCC" }
                         ],
                         sum:pieData[3].sum
