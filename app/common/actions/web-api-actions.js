@@ -24,5 +24,8 @@ module.exports = {
     //获取meta信息
     getStudentMeta:function(formData){
          WebAPIUtils.getStudentMeta(formData);
-    }
+    },
+	getAllExamInfo:function(formData){
+		WebAPIUtils.getAllExamInfo(formData);
+	}
 }
