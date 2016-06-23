@@ -78,16 +78,20 @@ var AnalysisPointView = React.createClass({
     },
     _onPrevNodes:function(e){
         var index = this.state.chartIndex;
-        this.setState({chartIndex:index-1});
+        this.setState({
+            chartIndex:index-1
+        });
     },
     _onNextNodes:function(e){
         var index = this.state.chartIndex;
-        this.setState({chartIndex:index+1});
+        this.setState({
+            chartIndex:index+1
+        });
     },
     _getDatasSource:function(){
         var index = this.state.chartIndex;
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        return ds.cloneWithRows(this.this.state.chartDatas[index]);
+        return ds.cloneWithRows(this.state.chartDatas[index]);
     },
     _onSelsectedScetion:function(){
     },
