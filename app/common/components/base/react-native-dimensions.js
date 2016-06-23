@@ -65,6 +65,7 @@ module.exports = {
 		"76":76*fontScale,
 		"76":76*fontScale,
 		"80":80*fontScale,
+		"86":86*fontScale,
 		"96":96*fontScale,
 		"200":200*fontScale,
 		"250":250*fontScale,

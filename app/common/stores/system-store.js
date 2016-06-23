@@ -666,11 +666,10 @@ return ele.no;
                   }
                   };
           });
-      
       return _.toArray(_.groupBy(_subject_attrs,function(ele){
           return ele.chapter_num;
       }));
-  },//获取知识图谱数据
+    },//获取知识图谱数据
     getSubjectAttrs:function(){
         return _subject_attrs;
     },
