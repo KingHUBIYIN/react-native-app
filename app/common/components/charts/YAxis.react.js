@@ -22,8 +22,8 @@ module.exports = React.createClass({
                 data.map(function(ele,pos){
                     return (
                         <G className="yaxis" key={pos}>
-                            <Line x1={ele.x1} y1={ele.y1} x2={ele.x2} y2={ele.y2} stroke={props.fill}></Line>
-                            <Text textAnchor="end" x={ele.x1-5} y={ele.y1+6} fill={props.textColor}>{ele.name}</Text>
+                            <Line x1={ele.x1} y1={ele.y1} x2={ele.x2} y2={ele.y2} stroke={props.fill} ></Line>
+                            <Text textAnchor="end"  x={ele.x1-5} y={ele.y1-6} fill={props.textColor}>{ele.name.toString()}</Text>
                         </G>
                     )
                 })  

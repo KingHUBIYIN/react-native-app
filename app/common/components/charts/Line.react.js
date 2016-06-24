@@ -24,7 +24,7 @@ module.exports = React.createClass({
         pathData.push("L"+data[i].x+","+data[i].y);
     }
     return (
-        <Path d={pathData.join("")} stroke={props.fill} strokeWidth="2" fill="none"></Path>
+        <Path d={pathData.join("")} stroke={props.fill} strokeWidth="1" fill="none"></Path>
     );
   }
 });
