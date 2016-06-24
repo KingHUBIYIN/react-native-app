@@ -59,7 +59,7 @@ var ImageSelceted = React.createClass({
 var SectionsList = React.createClass({
     _onhandleClick:function(){
         if(this.props.onPress){
-            this.props.onPress();
+            this.props.onPress("/analysis/index/details?A3="+this.props.rowData.A3+"&A4="+this.props.rowData.A4+"&total="+this.props.rowData.total+"&percent="+this.props.rowData.percent+"&points="+this.props.rowData.points);
         }
     },
     render:function(){
@@ -121,7 +121,8 @@ var AnalysisPointView = React.createClass({
             return ds.cloneWithRows([]);
         }
     },
-    _onSelsectedScetion:function(){
+    _onSelsectedScetion:function(hash){
+        History.pushRoute(hash);
     },
     _onRenderRow:function(rowData,sectionID,rowID){
         return(
