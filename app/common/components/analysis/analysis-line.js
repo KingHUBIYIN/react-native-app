@@ -2,7 +2,8 @@
 var React = require('react');
 var {
     Text,
-    View
+    View,
+	StyleSheet
 } = require('react-native')
 var NavBars = require('../base/navbars');
 var LineChart = require('../charts/LineChart.react');
@@ -36,21 +37,56 @@ var AnalysisLineView = React.createClass({
 		var data = this.state.data;
         return (<View>
                        <NavBars name="/analysis/index/line" />
-					   <View>
+					   <View  style={styles.lineContainer}>
 							<LineChart datas={data.line} width={width} height={width}></LineChart>
 					   </View>
-					   <View>
-							<View>
-								<View></View>
+					   <View  style={styles.footer}>
+							<View style={styles.footerstyle}>
+								<View style={[styles.redStyle,styles.bankColor]}></View>
 								<Text>作业数据</Text>
 							</View>
-							<View>
-								<View></View>
+							<View style={styles.footerstyle}>
+								<View style={[styles.greenStyle,styles.bankColor]}></View>
 								<Text>考试数据</Text>
 							</View>
 						</View>
                 </View>)
     }
 })
-		
+
+var styles = StyleSheet.create({
+	lineContainer:{
+		marginTop:Dimensions.size["10"]
+	},
+    greenStyle:{
+        backgroundColor: "#91DE74"
+    },
+    yellowStyle:{
+       backgroundColor: "#FFC22D"
+    },
+    redStyle:{
+       backgroundColor: "#FF7E60"
+    },
+    noneStyle:{
+       backgroundColor: "#CCCCCC"
+    },
+    footer:{
+        height:Dimensions.size["30"],
+        paddingLeft:Dimensions.size["10"],
+        paddingRight:Dimensions.size["10"],
+        flexDirection:"row",
+        alignItems:"center",
+        justifyContent:"space-around"
+    },
+    footerstyle:{
+        flexDirection:"row",
+        alignItems:"center",
+        justifyContent:"flex-start"
+    },
+    bankColor:{
+        width:Dimensions.size["7"],
+        height:Dimensions.size["7"]
+    }
+})
+
 module.exports = AnalysisLineView;

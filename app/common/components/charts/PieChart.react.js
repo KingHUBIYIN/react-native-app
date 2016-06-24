@@ -51,8 +51,8 @@ module.exports = React.createClass({
             return (
                 React.createElement(Arc,{
                     "key":""+ele.startAngle+"-"+ele.endAngle,
-                    "startAngle":ele.startAngle,
-                    "endAngle":ele.endAngle,
+                    "startAngle":ele.startAngle?ele.startAngle:0,
+                    "endAngle":ele.endAngle?ele.endAngle:0,
                     "backgroundColor":ele.backgroundColor, 
                     innerRadius:props.radius/2-40,
                     outerRadius:props.radius/2
@@ -64,10 +64,10 @@ module.exports = React.createClass({
             <Svg className="piechart" width={props.radius} height={props.radius} >
                 <G className="piechart-pie" x={props.radius/4} y={props.radius/4}>
                     {arcs}
-                    <G className="piechart-txts">
-                            <Text className="txts-title" y={-props.radius/5 } style={{"textAnchor":"middle","fontSize":"20px","fill":"#737373"}}>{props.title}</Text>
-                            <Text className="txts-value" y={25} style={{"textAnchor":"middle","fontSize":"76px","fill":"#91DE74"}}>{chartData[0].sum?chartData[0].percent+"%":"暂无考试"}</Text>
-                            <Text className="txts-subtitle" y={ props.radius/5+20}  style={{"textAnchor":"middle","fontSize":"20px","fill":"#737373"}}>{"题目数量："+chartData[0].sum}</Text>
+                    <G className="piechart-txts" width={props.radius} y={props.radius/4}>
+                            <Text className="txts-title" y={-props.radius/5 } x={props.radius/4} textAnchor="middle" fontSize="20" fill="#bfe59c" >{props.title}</Text>
+                            <Text className="txts-value" y={-20} x={props.radius/4} textAnchor="middle" fontSize="40"  fill="#fff" >{chartData[0].sum?chartData[0].percent+"%":"暂无考试"}</Text>
+                            <Text className="txts-subtitle" y={ props.radius/5-10} x={props.radius/4}  textAnchor="middle" fontSize="20" fill="#bfe59c">{"题目数量："+chartData[0].sum}</Text>
                     </G>
                 </G>
             </Svg>

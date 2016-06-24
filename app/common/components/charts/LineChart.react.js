@@ -48,7 +48,8 @@ module.exports = React.createClass({
           var xValues = [],xInterval = chartW/(xMax-1);
           for(var i=0;i<xMax;i++){
               var x = i*xInterval;
-              xValues.push({  x1:x, y1:chartH, x2:x, y2:chartH+7,name:  datas[0].values[i].x });
+			  var hasData = !!datas[0].values[i].x || datas[0].values[i].x===0;
+              xValues.push({  x1:x, y1:chartH, x2:x, y2:chartH+(hasData?5:3),name:  datas[0].values[i].x });
           }
           // Lines
           var Values = [];
@@ -94,7 +95,7 @@ module.exports = React.createClass({
                     <G className="linechart-graphics" x={45} y={10} >
                             <XAxis data={chartData.xValues} fill={ props.axiasFill}/>
                             <YAxis data={chartData.yValues} fill={ props.axiasFill}/>
-                            <G className="graphics-lines" >
+                            <G className="graphics-lines" x={-45} y={-10}>
                                 {lines}
                             </G>
                     </G>
