@@ -16,6 +16,8 @@ var {Link,History} = require('../base/react-native-router');
 var Dimensions = require('../base/react-native-dimensions');
 var {ContentContainer,RowContainer} = require('../base/system-container')
 var ToolBar = require('../base/react-native-toolbar');
+var KnowledgeChart = require('../charts/knowledgeChart.react');
+var {width} = Dimensions;
 
 //图片资源
 var ico_chinese = require("../../images/ico_chinese.png");
@@ -25,6 +27,18 @@ var AnalysisPointDetail = React.createClass({
 		History.popRoute();
 	},
     render:function(){
+        var percent = this.props.percent=="NaN"?0:this.props.percent;
+        var otherPercent = 1-parseInt(percent);
+        var data = [
+            {
+                percent:percent,
+                color:"#FFD800"
+            },
+            {
+                percent:otherPercent,
+                color:"#129DFF"
+            }
+        ];
         return (<ContentContainer>
                         <ToolBar navIcon={{title:"<图谱"}}  title="知识点详情" onNavIconPress={this.onNavIconPress}></ToolBar>
                         <ScrollView style={styles.ScrollView}>
@@ -40,22 +54,23 @@ var AnalysisPointDetail = React.createClass({
                                 <View style={styles.content}>
                                     <View style={styles.contentLeft}>
                                         <View style={styles.contentLeftItem}>
-                                            <View style={styles.titleWidth}><Text style={styles.fontStyle1}>完成作业</Text></View>
-                                            <View><Text style={styles.fontStyle1}>{this.props.A3}</Text></View>
-                                            <View><Text style={styles.fontStyle1}>次</Text></View>
+                                            <View style={styles.titleWidth}><Text style={styles.fontStyle}>完成作业</Text></View>
+                                            <View><Text style={styles.fontStyle}>{this.props.A3}</Text></View>
+                                            <View><Text style={styles.fontStyle}>次</Text></View>
                                         </View>
                                         <View style={styles.contentLeftItem}>
-                                            <View style={styles.titleWidth}><Text style={styles.fontStyle1}>完成考试</Text></View>
-                                            <View><Text style={styles.fontStyle1}>{this.props.A4}</Text></View>
-                                            <View><Text style={styles.fontStyle1}>次</Text></View>
+                                            <View style={styles.titleWidth}><Text style={styles.fontStyle}>完成考试</Text></View>
+                                            <View><Text style={styles.fontStyle}>{this.props.A4}</Text></View>
+                                            <View><Text style={styles.fontStyle}>次</Text></View>
                                         </View>
                                         <View style={styles.contentLeftItem}>
-                                            <View style={styles.titleWidth}><Text style={styles.fontStyle1}>共</Text></View>
-                                            <View><Text style={styles.fontStyle1}>{this.props.total}</Text></View>
-                                            <View><Text style={styles.fontStyle1}>道</Text></View>
+                                            <View style={styles.titleWidth}><Text style={styles.fontStyle}>共</Text></View>
+                                            <View><Text style={styles.fontStyle}>{this.props.total}</Text></View>
+                                            <View><Text style={styles.fontStyle}>道</Text></View>
                                         </View>
                                     </View>
                                     <View style={styles.contentRight}>
+                                        <KnowledgeChart data={data} />
                                     </View>
                                 </View>
                             </RowContainer>
@@ -66,6 +81,11 @@ var AnalysisPointDetail = React.createClass({
         
 
 var styles = StyleSheet.create({
+    textCenter:{
+        flexDirection:"row",
+        alignItems:"center",
+        justifyContent:"center"
+    },
     ScrollView:{
         height:Dimensions.screenHeight-Dimensions.toolBarHeight-Dimensions.tabBarHeight
     },
@@ -89,7 +109,8 @@ var styles = StyleSheet.create({
         marginBottom: Dimensions.size["7"]
     },
     contentRight:{
-        width: (Dimensions.screenWidth-Dimensions.size["36"])/2
+        width: (Dimensions.screenWidth-Dimensions.size["36"])/2,
+        paddingLeft:Dimensions.size["7"]
     },
     knowledge:{
         height: Dimensions.size["22"],
@@ -100,9 +121,6 @@ var styles = StyleSheet.create({
         justifyContent:"flex-start"
     },
     fontStyle:{
-        fontSize: Dimensions.size["7"]
-    },
-    fontStyle1:{
         fontSize: Dimensions.size["6"]
     },
     titleWidth:{

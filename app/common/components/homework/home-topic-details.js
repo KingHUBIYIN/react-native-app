@@ -81,11 +81,11 @@ var HomeTopicDetailView = React.createClass({
                             <View style = {styles.blankStyle1}></View>
                             <View style = {styles.paddingStyles}>
                                     <View><Text style = {styles.fontStyle}>正确答案：</Text></View>
-                                    <ReactNativeWebview name = {_topic_detail.std_answer} style = {styles.viewContent} />
+                                    <ReactNativeWebview name = {_topic_detail.answer} style = {styles.viewContent} />
                             </View>
                             <View style = {styles.paddingStyles}>
                                     <View><Text style = {styles.fontStyle}>解：</Text></View>
-                                    <ReactNativeWebview name = {topic_answer_raw} style = {styles.viewContent} />
+                                    <ReactNativeWebview name = "略" style = {styles.viewContent} />
                             </View>
                             <View style = {[styles.paddingStyles,styles.rowStyle]}>
                                     <View><Text style = {styles.fontStyle}>考点：</Text></View>

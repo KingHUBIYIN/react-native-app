@@ -174,6 +174,9 @@ var styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#B7B7B7",
         borderRadius: 2,
+        flexDirection:"row",
+        alignItems:"center",
+        justifyContent:"center"
     },
     topicTypeColor:{
         backgroundColor: "#74C93C",
@@ -181,7 +184,7 @@ var styles = StyleSheet.create({
         borderWidth: 0
     },
     textSize:{
-        fontSize: Dimensions.size["7"],
+        fontSize: Dimensions.size["6"],
         textAlign: "center"
     },
     textColor:{

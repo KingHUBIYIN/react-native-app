@@ -313,17 +313,16 @@ return ele.no;
                 topic_type: _topic_detail[0].topic_type,
                 subject: _topic_detail[0].subject,
                 no: _topic_detail[0].no,
-                std_answer: _topic_detail[0].answer,
+                answer: _topic_detail[0].answer,
                 answers: _topic_detail[0].answers,
-                content: _topic_detail[0].content,
-                topic_options: _topic_detail[0].topic_options
+                content: _topic_detail[0].content
             }
             return topic_detail;
         }else{
             return null;
         }
     },//我的作业中的试题详情
-    getWrongAnswerSheets:function(subject){
+    getWrongAnswerSheets:function(subject,toggle){
         var subjectInfo = this.getSubjectByName(subject);
         var answer_sheets = _.map(_wrong_answers,function(ele){
           var exam = ele.error_topics;
@@ -338,13 +337,22 @@ return ele.no;
               id:ele.answer_sheet_id,
               name:answer_sheet.name,
               subject_id:ele.subject_id,
-              date:new Date(ele.last_modify*1000).Format("yyyy/MM/dd"),
+              date:ele.last_modify,
               error:exams.length
           }
         });
         answer_sheets = answer_sheets.filter(function(ele){
             return ele.subject_id == subjectInfo.subject_id;
         });//过滤出不同科目的试卷
+        if(toggle){
+            answer_sheets = _.sortBy(answer_sheets,function(ele){
+                return ele.date;
+            })
+        }else{
+            answer_sheets = _.sortBy(answer_sheets,function(ele){
+                return -ele.date;
+            })
+        }
       return answer_sheets;
     },//分离不同科目错题试卷列表
     getWrongTopicChapter:function(subject){
@@ -823,9 +831,11 @@ SystemStore.dispatchToken = SystemDispatcher.register(function(action){
             var student_data = action.data.datas.filter(function(ele,pos){
                     return ele.pages && ele.pages.length>0;
             });
-            _student_data = _student_data.concat(student_data);
             next_cursor = action.data.next_cursor;
-            
+            for(var i=0;i<student_data.length;i++){
+                student_data[i].topics = TopicAPIUtils.parseTopics(student_data[i].topics);
+            }
+            _student_data = _student_data.concat(student_data);
             //对_student_data去重
             var obj = {};
             var data_len = _student_data.length;
@@ -837,12 +847,7 @@ SystemStore.dispatchToken = SystemDispatcher.register(function(action){
               data_arr.push(obj[key])
             };
             _student_data = data_arr;
-            
-            
-            for(var i=0;i<_student_data.length;i++){
-                _student_data[i].topics = TopicAPIUtils.parseTopics(_student_data[i].topics);
-            }
-             _student_data = _.sortBy(_student_data,function(ele){return -ele.date});
+            _student_data = _.sortBy(_student_data,function(ele){return -ele.date});
             SystemStore.emitChange(EventTypes.RECEIVED_ALL_DATA);
           break; 
         case ActionTypes.RECEIVED_STUDENT_META:
@@ -857,10 +862,12 @@ SystemStore.dispatchToken = SystemDispatcher.register(function(action){
             var wrong_answers = action.data.datas.filter(function(ele,pos){
                     return ele.pages && ele.pages.length>0;
             });
-            _wrong_answers = _wrong_answers.concat(wrong_answers);
             _wrong_next_cursor = action.data.next_cursor;
-            
-            //对_student_data去重
+            for(var i=0;i<wrong_answers.length;i++){
+                wrong_answers[i].topics = TopicAPIUtils.parseTopics(wrong_answers[i].topics);
+            }
+            _wrong_answers = _wrong_answers.concat(wrong_answers);   
+            //对_wrong_answers去重
             var obj = {};
             var data_len = _wrong_answers.length;
             for(var i = 0 ; i < data_len; i++){
@@ -871,12 +878,7 @@ SystemStore.dispatchToken = SystemDispatcher.register(function(action){
               data_arr.push(obj[key])
             };
             _wrong_answers = data_arr;
-            
-            
-            for(var i=0;i<_wrong_answers.length;i++){
-                _wrong_answers[i].topics = TopicAPIUtils.parseTopics(_wrong_answers[i].topics);
-            }
-             _wrong_answers = _.sortBy(_wrong_answers,function(ele){return -ele.date});
+            _wrong_answers = _.sortBy(_wrong_answers,function(ele){return -ele.date});
             SystemStore.emitChange(EventTypes.RECEIVED_EXAM_ERROR_TOPIC);
           break;   
       case ActionTypes.RECEIVED_TOPIC_SUGGEST:

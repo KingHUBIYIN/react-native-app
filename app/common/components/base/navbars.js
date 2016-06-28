@@ -33,7 +33,7 @@ var styles = StyleSheet.create({
 		borderBottomWidth:Dimensions.size["1"],
 		borderBottomColor:"#FFFFFF",
 		borderStyle:"solid",
-		marginHorizontal:Dimensions.size["4"]
+		marginHorizontal:Dimensions.size["2"]
 	},
 	defaultItem:{
 		borderBottomWidth:Dimensions.size["1"],
@@ -43,9 +43,8 @@ var styles = StyleSheet.create({
 	},
 	itemTitle:{
 		color:"#fff",
-		height:Dimensions.size["16"],
-		lineHeight:Dimensions.size["12"],
-		textAlign:"center"
+		textAlign:"center",
+        fontSize: Dimensions.size["6"]
 	}
 })
 

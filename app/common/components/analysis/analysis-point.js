@@ -205,7 +205,7 @@ var styles = StyleSheet.create({
         marginRight:Dimensions.size["5"]
     },
     fontStyle:{
-        fontSize:Dimensions.size["7"]
+        fontSize:Dimensions.size["6"]
     },
     rowContainer:{
         paddingTop:Dimensions.size["10"],
@@ -230,7 +230,7 @@ var styles = StyleSheet.create({
         borderRadius:2
     },
     sectionStyle:{
-        fontSize:Dimensions.size["7"]
+        fontSize:Dimensions.size["6"]
     },
     Img:{
         width:Dimensions.size["10"],

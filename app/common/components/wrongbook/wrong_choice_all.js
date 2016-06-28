@@ -25,7 +25,7 @@ var {EventTypes} = require('../../constants/system-constants');
 var RenderRow = React.createClass({
     handlePress:function(){
         if(this.props.onPress){
-            this.props.onPress("/wrong/index/" +this.props.subject + "/WrongMain/" +this.props.rowData.id);
+            this.props.onPress(this.props.rowData.id);
         }
     },
     render: function(){
@@ -44,7 +44,7 @@ var HomeListView = React.createClass({
     getInitialState:function(){
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         return {
-            answer_sheets: ds.cloneWithRows(SystemStore.getWrongAnswerSheets(this.props.subject)),
+            answer_sheets: ds.cloneWithRows(SystemStore.getWrongAnswerSheets(this.props.subject,this.props.toggle)),
             student_info:SystemStore.getSubjectByName(this.props.subject)
         }
     },
@@ -59,7 +59,7 @@ var HomeListView = React.createClass({
     _onChange:function(){
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.setState({
-            answer_sheets: ds.cloneWithRows(SystemStore.getWrongAnswerSheets(this.props.subject))
+            answer_sheets: ds.cloneWithRows(SystemStore.getWrongAnswerSheets(this.props.subject,this.props.toggle))
         })
     },
     _getExamErrorTopic:function(){
@@ -72,18 +72,25 @@ var HomeListView = React.createClass({
             <RenderRow subject = {this.props.subject} rowData  = {rowData} onPress = {this._onPushHash} />
         )
     },
-    _onPushHash:function(hash){
-         History.pushRoute(hash);
+    _onPushHash:function(answer_sheet_id){
+         if(this.props.onPress){
+             this.props.onPress(answer_sheet_id);
+         }
+    },
+    _getAnswerSheets:function(){
+        var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        return ds.cloneWithRows(SystemStore.getWrongAnswerSheets(this.props.subject,this.props.toggle))
     },
     render:function(){
-        var answer_sheets = this.state.answer_sheets;
+        var answer_sheets = this._getAnswerSheets();
         return (
             <ScrollView style = {styles.listview}>
                 <View style = {styles.rowContent}>
                       <View style = {styles.allTitle}><Text style = {styles.textSize}>全部作业</Text></View>
                       <ListView 
                         enableEmptySections={true} 
-                        onEndReachedThreshold = {10}
+                        onEndReachedThreshold = {20}
+                        pageSize = {5}
                         dataSource = {answer_sheets}
                         renderRow = {this._onRenderRow}
                         onEndReached = {this._getExamErrorTopic}
@@ -110,7 +117,7 @@ var styles = StyleSheet.create({
          borderBottomColor: "#D8D8D8"
     },
     textSize:{
-        fontSize: Dimensions.size["7"]
+        fontSize: Dimensions.size["6"]
     },
     listview:{
         height: Dimensions.screenHeight - Dimensions.toolBarHeight - Dimensions.size["25"]

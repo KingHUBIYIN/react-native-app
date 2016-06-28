@@ -237,7 +237,7 @@ var styles = StyleSheet.create({
         alignItems: "center"
     },
     fontStyle:{
-        fontSize: Dimensions.size["7"]
+        fontSize: Dimensions.size["6"]
     },
     borderstyle:{
         borderStyle: "solid",

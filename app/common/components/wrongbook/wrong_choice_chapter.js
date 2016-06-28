@@ -25,7 +25,7 @@ var {EventTypes} = require('../../constants/system-constants');
 var RenderRow = React.createClass({
     handlePress:function(){
         if(this.props.onPress){
-            this.props.onPress("/wrong/index/" +this.props.subject + "/WrongMain/" +this.props.rowData.answer_sheet_id)
+            this.props.onPress(this.props.rowData.answer_sheet_id)
         }
     },
     render:function(){
@@ -76,8 +76,10 @@ var HomeListView = React.createClass({
         var _wrong_next_cursor = SystemStore.getWrongNextCursor();
         WebAPIUtils.getExamErrorTopic({"subject_id":student_info.subject_id,"cursor":_wrong_next_cursor,"page_num":10});
     },
-    _onPushHash:function(hash){
-       History.pushRoute(hash);
+    _onPushHash:function(answer_sheet_id){
+       if(this.props.onPress){
+           this.props.onPress(answer_sheet_id);
+       }
     },
     render:function(){
         var chapter = this.state.chapter;
@@ -88,6 +90,7 @@ var HomeListView = React.createClass({
                       <ListView 
                             enableEmptySections={true} 
                             onEndReachedThreshold = {10}
+                            pageSize = {5}
                             dataSource={chapter} 
                             renderRow={this._onRenderRow}
                             renderSectionHeader={this._renderSectionHeader}
@@ -124,7 +127,7 @@ var styles = StyleSheet.create({
         borderBottomColor: "#D8D8D8"
     },
     textSize:{
-        fontSize: Dimensions.size["7"]
+        fontSize: Dimensions.size["6"]
     },
     listview:{
         height: Dimensions.screenHeight - Dimensions.toolBarHeight - Dimensions.size["25"]
