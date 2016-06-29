@@ -101,15 +101,6 @@ var HomeTopicDetailView = React.createClass({
                             </View>
                             <View style = {{height: 100}}></View>
                         </ScrollView>
-                        
-                        <View style = {styles.footer}>
-                             <TouchableOpacity onPress = {this._onJumpPratice}>
-                                <View style = {styles.footerCotent}>
-                                    <Image source = {ico_train} />
-                                    <Text style = {styles.footSize}>攻克训练</Text>
-                                </View>
-                             </TouchableOpacity>
-                        </View>
                 </ContentContainer>)
     }
 });

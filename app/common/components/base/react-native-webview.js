@@ -42,7 +42,7 @@ var ReactNativeWebview = React.createClass({
              div{
                 width: 100%;
                 height: auto;
-                font-size: 1.2em;
+                font-size: 1em;
                 line-height: 1.6em;
                 color: "#fff";
              }
