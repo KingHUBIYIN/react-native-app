@@ -11,8 +11,7 @@ var {
     TouchableOpacity,
     Image,
     Alert,
-    WebView,
-    PanResponder
+    WebView
 } = require('react-native')
 var Dimensions = require('../base/react-native-dimensions');
 var {Link,History} = require('../base/react-native-router');

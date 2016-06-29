@@ -1,8 +1,9 @@
 'use strict'
 var systemActions = require('../actions/system-actions');
 var localStorageUtils = require('./local-storage-utils');
-var {History} = require('../components/base/react-native-router')
-var {Alert} = require('react-native')
+var {History} = require('../components/base/react-native-router');
+var {Alert} = require('react-native');
+var SystemStore = require('../stores/system-store');
 
 const STUDENT_URL = 'http://testedu.idealsee.com';
 
@@ -65,7 +66,7 @@ var helper = {
 		Alert.alert("提示",error.msg,[{text: '确定', onPress: () => {} }])
 	},
 	handleUserDataChange:function(user){
-		History.pushRoute("/user/login");
+		History.pushRoute(user);
 	},
 }
 
@@ -144,7 +145,11 @@ module.exports = {
             if(data && data.user_info){
                 systemActions.receivedUserInfo(data.user_info);
             }
-			helper.handleUserDataChange(data.user_info);
+            if(data.guide_page == 1){
+                helper.handleUserDataChange("/user/login");
+            }else{
+                helper.handleUserDataChange("/user/guide-page");
+            }
         });
     },
      //分段获取试卷列表

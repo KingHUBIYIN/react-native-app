@@ -2,6 +2,7 @@
 var SystemDispatcher = require('../dispatcher/system-dispatcher');
 var {ActionTypes,EventTypes} = require('../constants/system-constants');
 var TopicAPIUtils = require('../utils/TopicAPIUtils');
+var localStorageUtils = require('../utils/local-storage-utils');
 
 var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
@@ -20,6 +21,9 @@ var _address_form = {};
 var _category = {};
 var _category_form = {};
 var _date_picker_form = {};
+
+//本地储存，引导页状态
+var guide_page = 0;
 
 //获取全部资源
 var _student_data = [];
@@ -52,6 +56,11 @@ var SystemStore = assign({},EventEmitter.prototype,{
     },
     removeChangeListener:function(type,callback){
         this.removeListener(type,callback)
+    },
+    setGuidePage:function(){
+        guide_page = 1;
+        localStorageUtils.setData("guide_page",guide_page);
+        return guide_page;
     },
     getNextCursor:function(){
         return next_cursor;

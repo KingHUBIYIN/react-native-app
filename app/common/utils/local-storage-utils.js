@@ -3,6 +3,7 @@ var LocalStorageManager = require('./local-storage-manager');
 
 var data = {
     user_info:{},
+    guide_page:null,
     my_send_info:[],
     my_message:[],
 	provinces:[

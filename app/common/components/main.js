@@ -42,6 +42,7 @@ var UserLoginView = require('./user/user-login')
 var UserWelcomeView = require('./user/user-welcome')
 var UserInfoView = require('./user/user-info')
 var UserHelpView = require('./user/user-help')
+var UserGuidePage = require('./user/user-guide-page')
 
 // user setting
 var UserSettingsView = require('./user_settings/settings')
@@ -105,6 +106,7 @@ var RouterApp = React.createClass({
                                 <Route component={UserWelcomeView} path="welcome"></Route>
 	                            <Route component={UserInfoView} path="info"></Route>
 								<Route component={UserHelpView} path="help"></Route>
+								<Route component={UserGuidePage} path="guide-page"></Route>
                         </Route>
                         <Route component={UserSettingsView} path="settings">
                                 <Route component={UserSettingsIndex} path="index"></Route>

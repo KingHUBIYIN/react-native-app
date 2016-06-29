@@ -32,6 +32,7 @@ module.exports = {
         "0.5":0.5*fontScale,
 		"1":1*fontScale,
 		"2":2*fontScale,
+		"3":3*fontScale,
 		"4":4*fontScale,
 		"5":5*fontScale,
 		"6":6*fontScale,
